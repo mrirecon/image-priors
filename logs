@@ -1,0 +1,56 @@
+##EXPERIMENT 1##
+Post-computation
+--Evaluate nlinv--
+coils' residual
+Scaled by: 0.985985+0.000737i
+0.169205
+recon's residual
+0.074375
+--Evaluate pics-espirit--
+coils' residual
+Scaled by: 0.986238+0.000059i
+0.167646
+recon's residual
+0.120941
+##EXPERIMENT 2##
+Post-computation
+--Evaluate nlinv--
+coils' residual
+Scaled by: 0.987722+0.000350i
+0.158162
+recon's residual
+0.059672
+--Evaluate pics-espirit--
+coils' residual
+Scaled by: 0.990073-0.000846i
+0.141970
+recon's residual
+0.112486
+##EXPERIMENT 3##
+Post-computation
+--Evaluate nlinv--
+coils' residual
+Scaled by: 0.988874+0.002020i
+0.150418
+recon's residual
+0.078150
+--Evaluate pics-espirit--
+coils' residual
+Scaled by: 0.984416+0.000998i
+0.178642
+recon's residual
+0.138227
+##EXPERIMENT 4##
+Post-computation
+--Evaluate nlinv--
+coils' residual
+Scaled by: 0.989508+0.001494i
+0.146000
+recon's residual
+0.070360
+--Evaluate pics-espirit--
+coils' residual
+Scaled by: 0.985480+0.000148i
+0.172302
+recon's residual
+0.151893
