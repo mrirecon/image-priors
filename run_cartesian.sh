@@ -106,9 +106,9 @@ post_computation()
     bart nrmse $1/rss_normalized $1/l1_recon_normalized_abs
 }
 
-run_recon=0
+run_recon=1
 
-if [ "0" == "0" ]; then
+if [ "0" == "1" ]; then
 
     echo "##EXPERIMENT 1##"
     
@@ -157,7 +157,7 @@ if [ "0" == "0" ]; then
 
 fi
 
-if [ "0" == "0" ]; then
+if [ "0" == "1" ]; then
 
     echo "##EXPERIMENT 2##"
     # settings
@@ -206,7 +206,7 @@ if [ "0" == "0" ]; then
 
 fi
 
-if [ "0" == "0" ]; then
+if [ "0" == "1" ]; then
     
     echo "##EXPERIMENT 3##" 
     # settings
@@ -256,7 +256,7 @@ if [ "0" == "0" ]; then
 
 fi
 
-if [ "0" == "0" ]; then
+if [ "0" == "1" ]; then
 
     echo "##EXPERIMENT 4##"
 
@@ -303,5 +303,59 @@ if [ "0" == "0" ]; then
 
     echo "Post-computation"
     post_computation $RES_PATH
+
+fi
+
+if [ "0" == "0" ]; then
+
+    echo "##EXPERIMENT 5##"
+
+    RES_PATH=/home/gluo/nlinv_prior
+    EXPER=poisson
+    PATTERN=2d
+    RATIO=3
+    RATIO_2=3
+    nx=256
+    ny=256
+    cal=20
+
+    RES_PATH=$RES_PATH/$EXPER
+    make_folder $RES_PATH
+
+    if [ "$run_recon" == "1" ]; then
+
+        echo "Recon begins"
+        
+        bart poisson -Y$nx -Z$ny -y$RATIO -z$RATIO_2 -C$cal $RES_PATH/mask
+        bart transpose 0 1 $RES_PATH/mask $RES_PATH/mask
+        bart transpose 1 2 $RES_PATH/mask $RES_PATH/mask
+
+        bart fmac $RES_PATH/mask $DATA_PATH $RES_PATH/und_kspace
+
+        bart fft -i $(bart bitmask 0 1) $DATA_PATH $RES_PATH/coils
+        bart rss $(bart bitmask 3) $RES_PATH/coils $RES_PATH/rss
+
+        zero_filled $RES_PATH
+
+        l1_espirit $RES_PATH 0.01
+
+        nlinv $RES_PATH 8
+
+        SCALAR=1
+        ITER=10
+        l1_nlinv $RES_PATH $ITER $SCALAR 0.01
+
+        SCALAR=1
+        ITER=9
+        GRAPH=/home/gluo/preco/prior/exported/pixel_cnn
+        STEP_SIZE=7
+        PCT=0.8
+        prior_nlinv $RES_PATH $ITER $SCALAR $GRAPH $STEP_SIZE $PCT
+        echo -e "Recon ends\n"
+    fi
+
+    echo "Post-computation"
+    post_computation $RES_PATH
+
 
 fi
