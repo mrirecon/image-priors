@@ -1,0 +1,21 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{calc}
+\graphicspath{{../}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\begin{document}
+    \begin{figure}
+        \centering
+        \begin{tabular}{c @{\hskip 1pt} c @{\hskip 1pt} c}
+            Channel 1& ESPIRiT & NLINV \\
+            \includegraphics[width=0.3\textwidth]{./1d_random/chn_.png}&
+            \includegraphics[width=0.3\textwidth]{./1d_random/sensitivity_.png}&
+            \includegraphics[width=0.3\textwidth]{./1d_random/sensitivity_nlinv_.png}\\
+            \phantom{\includegraphics[width=0.3\textwidth]{./1d_random/chn_.png}}&
+            \includegraphics[width=0.3\textwidth]{./1d_random/espirit_projection_residual_rss_.png}&
+            \includegraphics[width=0.3\textwidth]{./1d_random/prior_recon_projection_residual_rss_.png}\\
+        \end{tabular}
+
+    \end{figure}
+\end{document}

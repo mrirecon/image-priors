@@ -66,20 +66,19 @@ prior_nlinv()
 post_computation()
 {
     # normalized ground truth
-    bart normalize $(bart bitmask 0 1) $1/coils $1/coils_normalized
     bart normalize $(bart bitmask 0 1) $1/rss $1/rss_normalized
 
     echo "--Evaluate nlinv--"
-    bart normalize $(bart bitmask 0 1) $1/prior_recon_coils $1/prior_recon_coils_normalized
-    bart fmac $1/prior_recon_coils_normalized $1/prior_recon $1/prior_recon_projection
-    bart normalize $(bart bitmask 0 1) $1/prior_recon_projection $1/prior_recon_projection_normalized
+    #bart rss $(bart bitmask 3) $1/prior_recon_coils $1/prior_recon_coils_rss
+    #bart invert $1/prior_recon_coils_rss $1/prior_recon_coils_rss_invert
+    #bart fmac $1/prior_recon_coils $1/prior_recon_coils_rss_invert $1/prior_recon_coils_normalized
+    bart normalize $(bart bitmask 3) $1/prior_recon_coils $1/prior_recon_coils_normalized
+    bart fmac -C -s$(bart bitmask 3) $1/coils $1/prior_recon_coils_normalized  $1/img
+    bart fmac $1/img $1/prior_recon_coils_normalized $1/proj
     
-    bart saxpy -- -1 $1/prior_recon_projection_normalized $1/coils_normalized $1/prior_recon_projection_residual
+    bart saxpy -- -1. $1/coils $1/proj $1/prior_recon_projection_residual
 
     bart rss $(bart bitmask 3) $1/prior_recon_projection_residual $1/prior_recon_projection_residual_rss
-
-    echo "coils' residual"
-    bart nrmse -s $1/coils_normalized $1/prior_recon_projection_normalized
 
     echo "recon's residual"
     bart normalize $(bart bitmask 0 1) $1/prior_recon $1/prior_recon_normalized
@@ -89,15 +88,12 @@ post_computation()
 
 
     echo "--Evaluate pics-espirit--"
-    bart fmac $1/coilsen $1/l1_recon $1/l1_recon_projection    
-    bart normalize $(bart bitmask 0 1) $1/l1_recon_projection $1/l1_recon_projection_normalized
+    bart fmac -C -s$(bart bitmask 3) $1/coils $1/coilsen $1/img
+    bart fmac $1/img $1/coilsen $1/proj
 
-    bart saxpy -- -1 $1/l1_recon_projection_normalized $1/coils_normalized $1/l1_recon_projection_residual
+    bart saxpy -- -1 $1/coils $1/proj $1/l1_recon_projection_residual
 
     bart rss $(bart bitmask 3) $1/l1_recon_projection_residual $1/l1_recon_projection_residual_rss
-
-    echo "coils' residual"
-    bart nrmse -s $1/coils_normalized $1/l1_recon_projection_normalized
 
     echo "recon's residual"
     bart normalize $(bart bitmask 0 1) $1/l1_recon $1/l1_recon_normalized
@@ -108,7 +104,7 @@ post_computation()
 
 run_recon=1
 
-if [ "0" == "1" ]; then
+if [ "0" == "0" ]; then
 
     echo "##EXPERIMENT 1##"
     
@@ -157,7 +153,7 @@ if [ "0" == "1" ]; then
 
 fi
 
-if [ "0" == "1" ]; then
+if [ "0" == "0" ]; then
 
     echo "##EXPERIMENT 2##"
     # settings
@@ -206,7 +202,7 @@ if [ "0" == "1" ]; then
 
 fi
 
-if [ "0" == "1" ]; then
+if [ "0" == "0" ]; then
     
     echo "##EXPERIMENT 3##" 
     # settings
@@ -256,7 +252,7 @@ if [ "0" == "1" ]; then
 
 fi
 
-if [ "0" == "1" ]; then
+if [ "0" == "0" ]; then
 
     echo "##EXPERIMENT 4##"
 

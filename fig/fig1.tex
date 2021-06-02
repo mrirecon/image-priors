@@ -1,6 +1,7 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage{graphicx}
 \usepackage{calc}
+\usepackage{tikz}
 \graphicspath{{../}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
@@ -83,11 +84,19 @@
                 \end{tabular}\\
             \phantom{(a)} & \begin{tabular}{c @{\hskip 1pt} c @{\hskip 1pt} c @{\hskip 1pt} c @{\hskip 1pt} c}
                 \phantom{\includegraphics[width=0.19\textwidth]{./1d_random/zero_filled_crop_.png}}&
-                \includegraphics[width=0.19\textwidth]{./poisson/zero_filled_crop_.png}&
-                \includegraphics[width=0.19\textwidth]{./poisson/l1_recon_crop_.png}&
-                \includegraphics[width=0.19\textwidth]{./poisson/prior_recon_crop_.png}&
-                \includegraphics[width=0.19\textwidth]{./poisson/rss_crop_.png}
-                \end{tabular}\\
+                \begin{tikzpicture}[outer sep=0pt,inner sep=0pt]
+                \node () at (0,0) {\includegraphics[width=0.19\textwidth]{./poisson/zero_filled_crop_.png}};
+                \end{tikzpicture}&
+                \begin{tikzpicture}[outer sep=0pt,inner sep=0pt]
+                \node () at (0,0) {\includegraphics[width=0.19\textwidth]{./poisson/l1_recon_crop_.png}};
+                \end{tikzpicture}&
+                \begin{tikzpicture}[outer sep=0pt,inner sep=0pt]
+                \node () at (0,0) {\includegraphics[width=0.19\textwidth]{./poisson/prior_recon_crop_.png}};
+                \end{tikzpicture}&
+                \begin{tikzpicture}[outer sep=0pt,inner sep=0pt]
+                \node () at (0,0) {\includegraphics[width=0.19\textwidth]{./poisson/rss_crop_.png}};
+                \end{tikzpicture}
+                \end{tabular}
         \end{tabular}
     \end{figure}
 \end{document}
