@@ -1,3 +1,4 @@
+export TF_CPP_MIN_LOG_LEVEL=3
 exprs=(1d_random 1d_equal 2d_random 2d_equal poisson)
 
 shift=60
@@ -60,4 +61,18 @@ do
     bart transpose 0 1 $expr/tmp $expr/sensitivity_nlinv
     cfl2png -IN -CP $expr/sensitivity_nlinv $expr/sensitivity_nlinv
     
+done
+
+# convert clf to png for fig3
+for expr in ${exprs[@]}
+do
+    echo $expr
+    bart transpose 0 1 $expr/prior_recon $expr/prior_recon_t
+    bart transpose 0 1 $expr/prior_recon_coils $expr/prior_recon_coils_t
+    bart transpose 0 1 $expr/prior_recon_coils_normalized $expr/prior_recon_coils_normalized_t
+
+    bart fmac $expr/prior_recon_t $expr/prior_recon_coils_normalized_t $expr/prior_recon_coilimg
+
+    cfl2png -IN -CP $expr/prior_recon_coils_normalized_t $expr/prior_recon_coils
+    cfl2png -IN $expr/prior_recon_coilimg $expr/prior_recon_coilimg
 done
