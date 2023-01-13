@@ -1,4 +1,4 @@
-# Using a learned prior as regularization for nonlinear MRI reconstruction
+# Using a learned generative prior as regularization for nonlinear MRI reconstruction
 
 ## TODOs
 
