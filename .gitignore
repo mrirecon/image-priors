@@ -1,3 +1,10 @@
 logs
 results
 data
+*.png
+*.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
