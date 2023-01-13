@@ -1,0 +1,9 @@
+n_steps_each: 50
+nr_samples: 5
+step_size: 0.15
+
+model_folder: /home/ague/archive/projects/2021/gluo/mcmc_recon/models/net1/20210830-210110
+model_name: ncsn_brain_800
+
+savepath: /home/ague/data/gluo/dataset/abide_2/train
+key: mag

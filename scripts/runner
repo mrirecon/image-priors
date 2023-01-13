@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Be careful with this script, it might modify the shared filelist 
+# at the same time from different workstation even the chance of this is low.
+# The chance of this is lower when the running time of one single job is longer.
+# usage bash mk_prior.sh 
+
+set -e
+export TF_CPP_MIN_LOG_LEVEL=3
+
+CONFIG=$1
+FILELIST=$2
+FILE_BATCHES=$3
+NUM_GPUS=$4
+GPU_IDS=$5
+IFS=', ' read -a array <<< $GPU_IDS
+TMP=$6_$HOSTNAME
+NUM_FILES=$((FILE_BATCHES*NUM_GPUS))
+
+pop_lines()
+{
+    # usage pop the first $1 lines from the file $2 to the file $3
+    head -n$1 $2 > $3
+    sed -i -e "1,${1}d" $2
+}
+
+job()
+{
+    python augment_phase.py --config=$1 --filelist=$2 --gpu_id=$3 --file_batches=$4
+}
+
+if [[ $7 == "inbatch" ]] ; then
+    while pop_lines $NUM_FILES $FILELIST $TMP && test -s $TMP
+    do
+        split -a1 -d --lines=$FILE_BATCHES $TMP $TMP
+        for i in $(seq 0 $((NUM_GPUS-1)));
+        do
+            job $CONFIG $TMP$i ${array[i]} $FILE_BATCHES &
+        done
+        wait
+    done
+else
+    split -a1 -d --number=l/$NUM_GPUS $FILELIST $TMP
+    for i in $(seq 0 $((NUM_GPUS-1)));
+    do
+        job $CONFIG $TMP$i ${array[i]} $FILE_BATCHES &
+    done
+    wait
+fi
+
+
+test_flag=false
+if [ $test_flag = true ] ; then
+
+    FILELIST=/home/gluo/workspace/nlinv/scripts/data/test_list
+    TMP=/home/gluo/workspace/nlinv/scripts/data/tmp_list
+
+    job_test()
+    {
+        cat $1 >> validation
+    }
+
+    FILE_BATCHES=10
+    NUM_GPUS=3
+    NUM_FILES=$((FILE_BATCHES*NUM_GPUS))
+    touch validation
+
+    while pop_lines $NUM_FILES $FILELIST $TMP && test -s $TMP
+    do
+        split -a1 -d --lines=$FILE_BATCHES $TMP $TMP
+        for i in $(seq 0 $((NUM_GPUS-1)));
+        do
+            job_test $TMP$i
+        done
+    done
+
+fi
