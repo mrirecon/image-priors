@@ -22,12 +22,12 @@ max_keep: 100
 max_epochs: 100
 save_interval: 10
 saved_name: pixelcnn
-log_folder: /home/gluo/workspace/nlinv/logs
+log_folder: /home/gluo/workspace/nlinv_prior/logs
 
 num_prepare: 10
 print_loss: True
-train_list: /home/gluo/workspace/nlinv/scripts/data/abide/abide_train_p_filtered
-test_list: /home/gluo/workspace/nlinv/scripts/data/abide/abide_test_p
+train_list: /home/gluo/workspace/nlinv_prior/data/abide/abide_train_p_filtered
+test_list: /home/gluo/workspace/nlinv_prior/data/abide/abide_test_p
 
 nr_gpu: 3
 gpu_id: '0,1,2'
