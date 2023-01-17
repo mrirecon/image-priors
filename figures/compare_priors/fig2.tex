@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\graphicspath{{./sub_figs}}
+\usepackage[export]{adjustbox}
+
+\pagenumbering{gobble}
+\newlength{\mywidth}
+\newlength{\myheight}
+
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
+    innerleftmargin=1pt,innerrightmargin=0pt,innerbottommargin=2pt,backgroundcolor=gray!50,linecolor=gray!50}
+\definecolor{gray}{RGB}{220,220,220}
+
+\begin{document}
+\nopagecolor
+\setlength{\tabcolsep}{0pt}
+\def\arraystretch{0.2}
+
+\begin{mdframed}[style=mdstyle]
+  \resizebox{\textwidth}{!}{
+\begin{tabular}{c@{\hskip 1pt} c}
+    \rotatebox[origin=c]{90}{1D, R=5}&\begin{tabular}{c}
+      \input{fig_2a.tex}
+    \end{tabular}\\
+    \rotatebox[origin=c]{90}{2D, R=2x3}&\begin{tabular}{c}
+        \input{fig_2b.tex}
+    \end{tabular}\\
+    \rotatebox[origin=c]{90}{Poisson, R=8.2}&\begin{tabular}{c}
+        \input{fig_2c.tex}
+  \end{tabular}
+
+\end{tabular}}
+\end{mdframed}
+\end{document}

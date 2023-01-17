@@ -4,7 +4,7 @@ set -e
 
 export TF_CPP_MIN_LOG_LEVEL=3
 export CUDA_VISIBLE_DEVICES=PCI_BUS_ID
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=1
 
 if [[ -z "${ROOT_PATH}" ]]; then
     ROOT_PATH=/home/gluo/workspace/nlinv_prior

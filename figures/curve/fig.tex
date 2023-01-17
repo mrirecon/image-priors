@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\graphicspath{{./sub_figs}}
+\usepackage[export]{adjustbox}
+
+\pagenumbering{gobble}
+\newlength{\mywidth}
+\newlength{\myheight}
+
+\usepackage{mdframed}
+\mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
+    innerleftmargin=1pt,innerrightmargin=0pt,innerbottommargin=2pt,backgroundcolor=gray!50,linecolor=gray!50}
+\definecolor{gray}{RGB}{220,220,220}
+
+\begin{document}
+\nopagecolor
+\setlength{\tabcolsep}{0pt}
+
+
+\begin{mdframed}[style=mdstyle]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{c@{\hskip 1pt} c}
+    \rotatebox[origin=c]{90}{Recon}&\begin{tabular}{c}
+      \input{fig_a.tex}
+    \end{tabular}\\
+    \rotatebox[origin=c]{90}{ESPIRiT}&\begin{tabular}{c}
+        \input{fig_b.tex}
+    \end{tabular}\\
+    \rotatebox[origin=c]{90}{NLINV}&\begin{tabular}{c}
+        \input{fig_c.tex}
+  \end{tabular}
+\end{tabular}}
+\end{mdframed}
+\end{document}

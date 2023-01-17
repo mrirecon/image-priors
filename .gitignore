@@ -8,3 +8,5 @@ data
 *.fls
 *.log
 *.synctex.gz
+*.cfl
+*.hdr

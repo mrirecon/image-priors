@@ -15,8 +15,8 @@ win_ftr   = 0.65
 saveimg   = lambda x, upper, name: utils.save_img(x, "./sub_figs/"+name, vmax=upper*win_ftr)
 
 und_kspace = readcfl(os.path.join(result_path, exprs[0]), 'und_kspace')
-coilsen = abs(utils.bart(1, 'ecalib -r 20 -m1', und_kspace))
-mask = np.squeeze(coilsen>0.000001)[...,0]
+coilsen    = abs(utils.bart(1, 'ecalib -r 20 -m1', und_kspace))
+mask       = np.squeeze(coilsen>0.000001)[...,0]
 
 print('pattern & ', end='')
 for i, reco in enumerate(recos):
@@ -26,7 +26,7 @@ for i, reco in enumerate(recos):
     else:
         print('\n', end='')
 
-print('---------PSNR-----------')
+print('%---------PSNR-----------')
 
 
 for expr in exprs:
@@ -49,7 +49,7 @@ for expr in exprs:
         else:
             print('\n', end='')
 
-print('---------SSIM-----------')
+print('%---------SSIM-----------')
 
 
 for expr in exprs:
