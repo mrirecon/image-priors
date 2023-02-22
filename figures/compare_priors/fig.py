@@ -40,7 +40,7 @@ for expr in exprs:
     for i, reco in enumerate(recos):
 
         img = normalize(readcfl(cur_dir, reco))
-        psnr = utils.psnr(grd, img*mask)
+        psnr = utils.psnr(grd*mask, img*mask)
         saveimg(img, upper, expr+'_'+reco)
         print("%.2f"%psnr, end='')
 
@@ -59,7 +59,7 @@ for expr in exprs:
     print('%s\t&\t'%expr, end='')
     for i, reco in enumerate(recos):
         img = normalize(readcfl(cur_dir, reco))
-        ssim = utils.ssim(grd, img*mask)
+        ssim = utils.ssim(grd*mask, img*mask)
         print("%.4f"%ssim, end='')
 
         if i != len(recos)-1:
