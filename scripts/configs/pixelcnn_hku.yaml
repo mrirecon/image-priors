@@ -1,9 +1,9 @@
 
 model: 'PIXELCNN'
-batch_size: 10
+batch_size: 6
 input_shape: [256, 256, 2]
-nr_resnet: 4
-nr_filters: 10
+nr_resnet: 3
+nr_filters: 128
 nr_logistic_mix: 10
 data_chns: 'CPLX'
 dropout_rate: 0.5
@@ -22,14 +22,14 @@ max_keep: 100
 max_epochs: 500
 save_interval: 50
 saved_name: pixelcnn
-log_folder: /home/gluo/workspace/nlinv/logs
+log_folder: /home/gluo/workspace/nlinv_prior/logs
 
 num_prepare: 10
 print_loss: True
-train_list: /home/gluo/workspace/nlinv/scripts/data/hku_train
-test_list: /home/gluo/workspace/nlinv/scripts/data/hku_test
+train_list: /home/gluo/workspace/nlinv_prior/data/hku/hku_train
+test_list: /home/gluo/workspace/nlinv_prior/data/hku/hku_test
 
-nr_gpu: 3
-gpu_id: '0,1,2'
+nr_gpu: 4
+gpu_id: '0,1,2,3'
 
 # with flip 
