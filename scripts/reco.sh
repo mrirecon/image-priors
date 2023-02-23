@@ -1,4 +1,5 @@
 #!/bin/bash
+# compare priors that are trained on different datasets
 
 set -e 
 
