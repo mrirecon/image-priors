@@ -6,6 +6,7 @@ from nibabel.processing import conform
 import os
 import numpy as np
 import tqdm
+import argparse
 
 def load_file(path, x=256, y=256):
     try:
@@ -66,9 +67,15 @@ def process_nii(file_path, counter, folder=None):
     return counter
 
 # get all the nii files from the given folder
-files       = utils.check_out("find /home/ague/data/gluo/ABIDE -type f -name \"*.nii\" ")
-save_folder = '/home/ague/data/gluo/dataset/abide_2/magnitude'
+def main(folder , savepath):
+    files       = utils.check_out("find %s -type f -name \"*.nii\" "%folder)
+    counter = 1000000
+    for file in tqdm.tqdm(files):
+        counter = process_nii(file, counter, savepath)
 
-counter = 1000000
-for file in tqdm.tqdm(files):
-    counter = process_nii(file, counter, save_folder)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--folder', metavar='path', default='/home/ague/data/gluo/ABIDE', help='')
+    parser.add_argument('--savepath', metavar='path', default='/home/ague/data/gluo/dataset/abide_2/magnitude', help='')
+    args = parser.parse_args()
+    main(args.folder, args.savepath)
