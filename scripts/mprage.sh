@@ -6,6 +6,7 @@ export TF_FORCE_GPU_ALLOW_GROWTH=true
 export TF_CPP_MIN_LOG_LEVEL=3
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
+export DEBUG_DEVEL=1
 
 if [[ -z "${ROOT_PATH}" ]]; then
     ROOT_PATH=/home/gluo/workspace/nlinv_prior
@@ -51,12 +52,12 @@ GRAPH3=$ROOT_PATH/logs/exported/pixelcnn_hku
 
 pics()
 {
-    bart pics -g -i80 -d4 -R TF:{$1}:$pics_lambda slice slice_coils $3_pics_$2
+    bart pics -g -i80 -R TF:{$1}:$pics_lambda slice slice_coils $3_pics_$2
 }
 
 nlinv()
 {
-    bart nlinv -g -d4 -a660 -b44 -i$gs_step -C50 -r3 --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 slice $3_nlinv_$2 $3_nlinv_coils_$2
+    bart nlinv -g -a660 -b44 -i$gs_step -C50 -r3 --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 slice $3_nlinv_$2 $3_nlinv_coils_$2
 }
 
 for num in $(seq 70 150)
