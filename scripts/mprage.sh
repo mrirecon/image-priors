@@ -2,6 +2,7 @@
 
 set -e 
 
+export TF_FORCE_GPU_ALLOW_GROWTH=true
 export TF_CPP_MIN_LOG_LEVEL=3
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
@@ -71,7 +72,7 @@ pics $GRAPH2 $num abide_filtered
 pics $GRAPH3 $num hku
 
 # nlinv
-bart nlinv -g -d4 -a660 -b44 -i10 -r2.2 slice nlinv nlinv_coils
+bart nlinv -g -d4 -a660 -b44 -i10 -r2.2 slice nlinv_$num nlinv_coils_$num
 nlinv $GRAPH1 $num abide
 nlinv $GRAPH2 $num abide_filtered
 nlinv $GRAPH3 $num hku
@@ -81,4 +82,24 @@ bart ecalib -r 20 -m1 -c 0.001 ckdat_256 coils
 bart pics -g -l1 -r 0.02 ckdat_256 coils volume
 
 bart fft -i $(bart bitmask 0 1) kdat_xy cimgs
-bart rss $(bart bitmask 3) kdat_xy zero_filled
+bart rss $(bart bitmask 3) cimgs zero_filled
+
+# concatenate slices
+concatenate()
+{
+s1=""
+for num in $(seq 70 150)
+do
+    s1=$s1$1_$num" "
+done
+bart join 2 $s1 $1_volume
+}
+
+concatenate abide_nlinv
+concatenate abide_filtered_nlinv
+concatenate hku_nlinv
+concatenate abide_pics
+concatenate abide_filtered_pics
+concatenate hku_pics
+concatenate l1_pics
+concatenate nlinv
