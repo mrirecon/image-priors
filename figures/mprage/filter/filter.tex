@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\graphicspath{{../sub_figs}}
+\usepackage[export]{adjustbox}
+
+\pagenumbering{gobble}
+\newlength{\mywidth}
+\newlength{\myheight}
+
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
+    innerleftmargin=1pt,innerrightmargin=0pt,innerbottommargin=2pt,backgroundcolor=gray!50,linecolor=gray!50}
+\definecolor{gray}{RGB}{220,220,220}
+
+\begin{document}
+\nopagecolor
+\setlength{\tabcolsep}{0pt}
+\def\arraystretch{0.2}
+
+\begin{mdframed}[style=mdstyle]
+  \resizebox{\textwidth}{!}{
+\begin{tabular}{c@{\hskip 1pt} c}
+    \rotatebox[origin=c]{90}{PICS}&\begin{tabular}{c}
+      \input{./filter_a.tex}
+    \end{tabular}\\
+    \rotatebox[origin=c]{90}{NLINV}&\begin{tabular}{c}
+        \input{./filter_b.tex}
+    \end{tabular}
+  
+\end{tabular}}
+\end{mdframed}
+\end{document}
