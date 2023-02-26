@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+
+%\usepackage[a4paper,bindingoffset=0.2in,left=1in,right=1in,top=1in,bottom=1in,footskip=.25in]{geometry}
+\usepackage[export]{adjustbox}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
+    innerleftmargin=1pt,innerrightmargin=0pt,innerbottommargin=2pt,backgroundcolor=gray!50,linecolor=gray!50}
+\definecolor{gray}{RGB}{220,220,220}
+\pagenumbering{gobble}
+\tikzset{style={inner sep=0,outer sep=0}}
+\pgfplotsset{compat=1.17,
+	yticklabel style = {/pgf/number format/assume math mode=true, font = {\fontsize{10pt}{12pt}\fontfamily{cmss} \selectfont}},
+	x tick label style = {font= {\fontsize{12pt}{12pt} \fontfamily{qcr} \selectfont}},
+	legend style = {font = {\fontsize{12pt}{12pt} \fontfamily{qcr} \selectfont}},
+	title style = {font = {\fontsize{14pt}{14pt} \fontfamily{cmss} \selectfont}},
+	xlabel style={yshift=-.3em},
+	ylabel style={yshift=.2em, font = {\fontsize{12pt}{12pt}\fontfamily{cmss} \selectfont}},
+	every axis plot/.append style={very thick},
+	axis line style = {ultra thick},
+}
+
+\begin{document}
+\nopagecolor
+\begin{mdframed}[style=mdstyle]
+    \resizebox{\textwidth}{!}{
+		\input{stats.tex}
+}
+\end{mdframed}
+
+\end{document}
