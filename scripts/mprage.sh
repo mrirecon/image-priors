@@ -1,9 +1,10 @@
 #!/bin/bash
-
 set -e 
 
 export TF_FORCE_GPU_ALLOW_GROWTH=true
 export TF_CPP_MIN_LOG_LEVEL=3
+export TF_NUM_INTEROP_THREADS=4
+export TF_NUM_INTRAOP_THREADS=4
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
@@ -16,15 +17,17 @@ fi
 echo "Working in the folder $WORKSPACE"
 
 #
-acc=3
+acc=1
 vcc=10
-pics_lambda=4
+pics_lambda=5
 nlinv_lambda=5
 reg_iter=4
 gs_step=11
 redu=3
+start=70
+end=110
 
-folder=redu_${redu}_${nlinv_lambda}_$acc
+folder=redu_${redu}_${nlinv_lambda}_${pics_lambda}_$acc
 mkdir -p $WORKSPACE/$folder
 cd $WORKSPACE/$folder
 
@@ -56,56 +59,61 @@ bart fmac mask kdat_xy kdat_xy_u
 
 pics()
 {
-    bart pics -g -i80 -R TF:{$1}:$pics_lambda slice slice_coils $3_pics_$2
+    bart pics -g -i80 -R TF:{$1}:$pics_lambda $4 $5 $3_pics_$2
 }
 
 nlinv()
 {
-    bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 slice $3_nlinv_$2 $3_nlinv_coils_$2
+    bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
 }
 
-for num in $(seq 70 150)
+for num in $(seq $start $end)
 do
-bart slice 2 $num kdat_xy_u slice
-bart ecalib -r 20 -m1 -c 0.001 slice slice_coils
+tmp_slice=$(mktemp /tmp/abc-script.XXXXXX)
+tmp_coils=$(mktemp /tmp/abc-script.XXXXXX)
+bart slice 2 $num kdat_xy_u $tmp_slice
+bart ecalib -r 20 -m1 -c 0.001 $tmp_slice $tmp_coils
 
 # pics
-bart pics -g -l1 -r 0.02 slice slice_coils l1_pics_$num
-bart pics -g -l2 -r 0.02 slice slice_coils l2_pics_$num
-pics $GRAPH1 $num abide
-pics $GRAPH2 $num abide_filtered
-pics $GRAPH3 $num hku
+bart pics -g -l1 -r 0.02 $tmp_slice $tmp_coils l1_pics_$num
+bart pics -g -l2 -r 0.02 $tmp_slice $tmp_coils l2_pics_$num
+pics $GRAPH1 $num abide $tmp_slice $tmp_coils
+pics $GRAPH2 $num abide_f $tmp_slice $tmp_coils
+pics $GRAPH3 $num hku $tmp_slice $tmp_coils
+wait
 
 # nlinv
-bart nlinv -g -a660 -b44 -i10 -r$redu slice l2_nlinv_$num l2_nlinv_coils_$num
-bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 slice l1_nlinv_$num l1_nlinv_coils_$num
-nlinv $GRAPH1 $num abide
-nlinv $GRAPH2 $num abide_filtered
-nlinv $GRAPH3 $num hku
+bart nlinv -g -a660 -b44 -i10 -r2 $tmp_slice l2_nlinv_$num l2_nlinv_coils_$num
+bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice l1_nlinv_$num l1_nlinv_coils_$num
+nlinv $GRAPH1 $num abide $tmp_slice
+nlinv $GRAPH2 $num abide_f $tmp_slice
+nlinv $GRAPH3 $num hku $tmp_slice
+wait
 done
 
 # expect the worst reconstruction without any prior knowledge
 bart fft -i $(bart bitmask 0 1) kdat_xy_u cimgs
 bart rss $(bart bitmask 3) cimgs zero_filled
-bart extract 2 70 151 zero_filled czero_filled
+bart extract 2 $start $(($end + 1)) zero_filled czero_filled
 
 # expect the best reconstruction from the most k-space data using pics
 bart ecalib -r 20 -m1 ckdat_256 coils
 bart pics -g -l1 -r 0.02 ckdat_256 coils volume
-bart extract 2 70 151 volume cvolume
+bart extract 2 $start $(($end + 1)) volume cvolume
 
 # expect the best reconstruction from the most k-space data using nlinv
-for num in $(seq 70 150)
+for num in $(seq $start $end)
 do
-bart slice 2 $num kdat_xy slice
-bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 slice nlinv_$num nlinv_coils_$num
+tmp_slice=$(mktemp /tmp/abc-script.XXXXXX)
+bart slice 2 $num kdat_xy $tmp_slice
+bart nlinv -g -a660 -b44 -i$gs_step -C50 -r2 --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice nlinv_$num nlinv_coils_$num
 done
 
 # concatenate slices
 concatenate()
 {
 s1=""
-for num in $(seq 70 150)
+for num in $(seq $start $end)
 do
     s1=$s1$1_$num" "
 done
@@ -114,12 +122,12 @@ bart join 2 $s1 $1_volume
 
 
 concatenate abide_pics
-concatenate abide_filtered_pics
+concatenate abide_f_pics
 concatenate hku_pics
 concatenate l1_pics
 concatenate l2_pics
 concatenate abide_nlinv
-concatenate abide_filtered_nlinv
+concatenate abide_f_nlinv
 concatenate hku_nlinv
 concatenate l2_nlinv
 concatenate l1_nlinv
