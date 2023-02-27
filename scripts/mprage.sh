@@ -10,22 +10,22 @@ export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
 
 if [[ -z "${WORKSPACE}" ]]; then
-    WORKSPACE=/home/gluo/workspace/nlinv_prior/results/mprage/redu
+    WORKSPACE=/scratch_radon/gluo/mprage
 else
     echo "The variable WORKSPACE exists"
 fi
 echo "Working in the folder $WORKSPACE"
 
 #
-acc=1
+acc=3
 vcc=10
 pics_lambda=5
 nlinv_lambda=5
 reg_iter=4
 gs_step=11
-redu=3
+redu=2.5
 start=70
-end=110
+end=150
 
 folder=redu_${redu}_${nlinv_lambda}_${pics_lambda}_$acc
 mkdir -p $WORKSPACE/$folder
@@ -52,7 +52,7 @@ if [ ! -f kdat.cfl ]; then
     rm tmp.* kdat__.* kdat_.* kdat_256.*
 fi
 
-bart upat -Y256 -Z256 -y$acc -z2 -c30 mask
+bart upat -Y256 -Z256 -y$acc -z1 -c30 mask
 bart transpose 0 1 mask mask
 bart transpose 1 2 mask mask
 bart fmac mask kdat_xy kdat_xy_u
@@ -80,7 +80,6 @@ bart pics -g -l2 -r 0.02 $tmp_slice $tmp_coils l2_pics_$num
 pics $GRAPH1 $num abide $tmp_slice $tmp_coils
 pics $GRAPH2 $num abide_f $tmp_slice $tmp_coils
 pics $GRAPH3 $num hku $tmp_slice $tmp_coils
-wait
 
 # nlinv
 bart nlinv -g -a660 -b44 -i10 -r2 $tmp_slice l2_nlinv_$num l2_nlinv_coils_$num
@@ -88,7 +87,6 @@ bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0
 nlinv $GRAPH1 $num abide $tmp_slice
 nlinv $GRAPH2 $num abide_f $tmp_slice
 nlinv $GRAPH3 $num hku $tmp_slice
-wait
 done
 
 # expect the worst reconstruction without any prior knowledge
