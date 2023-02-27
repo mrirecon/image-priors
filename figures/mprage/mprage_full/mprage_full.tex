@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{standalone}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{xcolor}
@@ -6,8 +6,6 @@
 \usepackage[export]{adjustbox}
 
 \pagenumbering{gobble}
-\newlength{\mywidth}
-\newlength{\myheight}
 
 \usepackage[framemethod=TikZ]{mdframed}
 \mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
@@ -19,23 +17,28 @@
 \setlength{\tabcolsep}{0pt}
 \def\arraystretch{0.2}
 
-\begin{mdframed}[style=mdstyle]
+%\begin{mdframed}[style=mdstyle]
   \resizebox{\textwidth}{!}{
 \begin{tabular}{c@{\hskip 1pt} c}
-    \rotatebox[origin=c]{90}{PICS}&\begin{tabular}{c}
+  \rotatebox[origin=c]{90}{PICS, x2}&\begin{tabular}{c}
+    \input{./fig_e.tex}
+  \end{tabular}\\
+  \rotatebox[origin=c]{90}{NLINV, x2}&\begin{tabular}{c}
+      \input{./fig_f.tex}
+  \end{tabular}\\
+    \rotatebox[origin=c]{90}{PICS, x4}&\begin{tabular}{c}
       \input{./fig_a.tex}
     \end{tabular}\\
-    \rotatebox[origin=c]{90}{NLINV}&\begin{tabular}{c}
+    \rotatebox[origin=c]{90}{NLINV, x4}&\begin{tabular}{c}
         \input{./fig_b.tex}
     \end{tabular}\\
-
-    \rotatebox[origin=c]{90}{PICS}&\begin{tabular}{c}
+    \rotatebox[origin=c]{90}{PICS, x6}&\begin{tabular}{c}
         \input{./fig_c.tex}
       \end{tabular}\\
-      \rotatebox[origin=c]{90}{NLINV}&\begin{tabular}{c}
+      \rotatebox[origin=c]{90}{NLINV, x6}&\begin{tabular}{c}
           \input{./fig_d.tex}
       \end{tabular}
   
 \end{tabular}}
-\end{mdframed}
+%\end{mdframed}
 \end{document}
