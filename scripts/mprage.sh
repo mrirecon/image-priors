@@ -22,7 +22,7 @@ vcc=10
 pics_lambda=5
 nlinv_lambda=5
 reg_iter=4
-gs_step=11
+max_iter=11
 redu=2.5
 start=70
 end=150
@@ -64,13 +64,13 @@ pics()
 
 nlinv()
 {
-    bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
+    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
 }
 
 for num in $(seq $start $end)
 do
-tmp_slice=$(mktemp /tmp/abc-script.XXXXXX)
-tmp_coils=$(mktemp /tmp/abc-script.XXXXXX)
+tmp_slice=$(mktemp /tmp/slice-script.XXXXXX)
+tmp_coils=$(mktemp /tmp/coils-script.XXXXXX)
 bart slice 2 $num kdat_xy_u $tmp_slice
 bart ecalib -r 20 -m1 -c 0.001 $tmp_slice $tmp_coils
 
@@ -83,7 +83,7 @@ pics $GRAPH3 $num hku $tmp_slice $tmp_coils
 
 # nlinv
 bart nlinv -g -a660 -b44 -i10 -r2 $tmp_slice l2_nlinv_$num l2_nlinv_coils_$num
-bart nlinv -g -a660 -b44 -i$gs_step -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice l1_nlinv_$num l1_nlinv_coils_$num
+bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice l1_nlinv_$num l1_nlinv_coils_$num
 nlinv $GRAPH1 $num abide $tmp_slice
 nlinv $GRAPH2 $num abide_f $tmp_slice
 nlinv $GRAPH3 $num hku $tmp_slice
@@ -104,7 +104,7 @@ for num in $(seq $start $end)
 do
 tmp_slice=$(mktemp /tmp/abc-script.XXXXXX)
 bart slice 2 $num kdat_xy $tmp_slice
-bart nlinv -g -a660 -b44 -i$gs_step -C50 -r2 --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice nlinv_$num nlinv_coils_$num
+bart nlinv -g -a660 -b44 -i$max_iter -C50 -r2 --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice nlinv_$num nlinv_coils_$num
 done
 
 # concatenate slices

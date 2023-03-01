@@ -6,8 +6,8 @@ crop_and_cnvrt()
 {
     tmpfile1=$(mktemp /tmp/abc-script.XXXXXX)
     tmpfile2=$(mktemp /tmp/abc-script.XXXXXX)
-    bart extract 2 $3 $(($3 + 1)) $1/$2/$5 $tmpfile1
-    bart extract 0 100 150 1 45 185 2 $3 $(($3 + 1)) $1/$2/$5 $tmpfile2
+    bart extract 0 20 226 1 45 200 2 $3 $(($3 + 1)) $1/$2/$5 $tmpfile1
+    bart extract 0 80 140 1 58 175 2 $3 $(($3 + 1)) $1/$2/$5 $tmpfile2
     cfl2png -c $4 $tmpfile1 $6
     cfl2png -c $4 $tmpfile2 $6_crop
 }
@@ -31,13 +31,20 @@ print()
     cd ../../
 }
 
-result_path=/home/ague/archive/projects/2023/gluo/learned_reg
-config=/home/gluo/workspace/nlinv_prior/figures/mprage/view_config
-config2=/home/gluo/workspace/nlinv_prior/figures/mprage/view_config2
+result_path=/media/radon_ague/archive/projects/2023/gluo/learned_reg
+config=/home/jason/gluo_remote/workspace/nlinv_prior/figures/mprage/view_config
+
+expr=redu_3_5_5_1
+slice=45
+print $result_path $expr $slice $config 
+mv sub_figs/$expr/* sub_figs/1
+
 expr=redu_3_5_5_2
 slice=45
-print $result_path $expr $slice $config2 
+print $result_path $expr $slice $config 
+mv sub_figs/$expr/* sub_figs/2
 
 expr=redu_3_5_5_3
 slice=45
-print $result_path $expr $slice $config2
+print $result_path $expr $slice $config
+mv sub_figs/$expr/* sub_figs/3
