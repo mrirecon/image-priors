@@ -10,3 +10,6 @@ data
 *.synctex.gz
 *.cfl
 *.hdr
+old_compare_priors
+trn_size
+tmp
