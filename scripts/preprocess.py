@@ -39,7 +39,7 @@ def mk_slice(arr, idx, save_name):
     region = n_slice[:30, :30]
     #print("std: %.4f mean: %.4f"%(np.std(region), np.mean(region)))
     if np.std(region)<0.0061 and np.mean(region) < 0.04:
-        utils.save_img(n_slice, save_name)
+        #utils.save_img(n_slice, save_name)
         mag = n_slice
         np.savez(save_name, mag=mag)
         return True
