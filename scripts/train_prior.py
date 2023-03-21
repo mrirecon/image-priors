@@ -1,9 +1,32 @@
-from spreco.common import utils, pipe
-from spreco.workbench.worker import worker
+from spreco.common import utils
+from spreco.trainer import trainer
+from spreco.dataflow.base import RNGDataFlow
+from spreco.dataflow.common import BatchData
+from spreco.dataflow.parallel_map import MultiThreadMapData
+
 
 import os
 import numpy as np
 import argparse
+
+class cfl_pipe(RNGDataFlow):
+
+    def __init__(self, files, shuffle):
+        self._size   = len(files)
+        self.files   = files
+        self.shuffle = shuffle
+    
+    def __len__(self):
+        return len(self.files)
+    
+    def __iter__(self):
+        idxs = np.arange(self._size)
+        if self.shuffle:
+            self.rng.shuffle(idxs)
+        
+        for idx in idxs:
+            fname = self.files[idx]
+            yield fname
 
 def main(config_path):
 
@@ -22,20 +45,16 @@ def main(config_path):
     except:
         raise Exception("Load the list of test files failed, please check!")
 
+
     def load_file(x):
         """
         x     ---> file path
-        imgs  ---> normalized images with shape (batch_size, x, y, 2)
+        imgs  ---> normalized images with shape (batch_size, x, y, 2) 
         """
         path, ext = os.path.splitext(x)
-        if ext == '.cfl' or ext == '.hdr':
-            imgs = np.squeeze(utils.readcfl(path))
-            imgs = imgs / np.max(np.abs(imgs), axis=(1,2), keepdims=True)
-            imgs = utils.cplx2float(imgs)
-        elif ext == '.npz':
-            x = np.squeeze(utils.npz_loader(x, 'rss'))
-            x = utils.normalize_with_max(x)
-            imgs = x[np.newaxis, ...]
+        imgs = np.squeeze(utils.readcfl(path))
+        imgs = imgs / np.max(np.abs(imgs), axis=(1,2), keepdims=True)
+        imgs = utils.cplx2float(imgs)
         return imgs
 
     def flip_and_rotate(x, case=1):
@@ -69,46 +88,45 @@ def main(config_path):
 
     def aug_load_file(x):
         x = np.mean(load_file(x), axis=0, keepdims=True)
-        case_nums = np.random.randint(1,9,1)
-        for i, case in enumerate(case_nums):
-            x[i] = flip_and_rotate(x[i][np.newaxis, ...], case)
+        x = np.squeeze(flip_and_rotate(x, np.random.randint(1,9,1)[0]))
         return x
 
     def randint(x, dtype='int32'):
         # x is a dummy arg
-        return np.random.randint(0, config['nr_levels'], (5), dtype=dtype)
+        return np.random.randint(0, config['nr_levels'], (1), dtype=dtype)
 
     def randfloat(x, eps= 1.e-5, T= 1.):
         # x is a dummy arg
-        return np.random.uniform(eps, T, size=(100))
+        return np.random.uniform(eps, T, size=(1))
 
     if config['model'] == 'NCSN':
-        parts_funcs = [[aug_load_file], [randint]]
-        shape_info      = [config['input_shape'], [1]]
-        names           = ['inputs', 't']
+        def map_f(x):
+            d1 = aug_load_file(x)
+            d2 = np.squeeze(randint(x))
+            return {"inputs": d1, "t": d2}
     elif config['model'] == 'SDE':
-        parts_funcs = [[aug_load_file], [randfloat]]
-        shape_info      = [config['input_shape'], [1]]
-        names           = ['inputs', 't']
+        def map_f(x):
+            d1 = aug_load_file(x)
+            d2 = np.squeeze(randfloat(x))
+            return {"inputs": d1, "t": d2}
     elif config['model'] == 'PIXELCNN':
-        parts_funcs = [[aug_load_file]]
-        shape_info      = [config['input_shape']]
-        names           = ['inputs']
+        def map_f(x):
+            d = aug_load_file(x)
+            return {"inputs": d}
     else:
-        raise Exception("You can only train ncsn and pixelcnn with this script")
+        raise Exception("Please select NCSN or SDE or PIXELCNN")
 
-    train_pipe = pipe.create_pipe(parts_funcs,
-                        source=train_files,
-                        buffer_size=config['num_prepare'],
-                        batch_size=config['batch_size']*config['nr_gpu'],
-                        shape_info=shape_info, names=names)
+    nr_elm = config['batch_size']*config['nr_gpu']
 
-    test_pipe  = pipe.create_pipe(parts_funcs, test_files,
-                                buffer_size=config['num_prepare'],
-                                batch_size = config['batch_size']*config['nr_gpu'],
-                                shape_info=shape_info, names=names)
+    d1 = cfl_pipe(train_files, True)
+    d1 = MultiThreadMapData(d1, num_thread=config['num_thread'], map_func=map_f,  buffer_size=nr_elm*10, strict=True)
+    train_pipe = BatchData(d1, nr_elm, use_list=False)
 
-    go = worker(train_pipe, test_pipe, config)
+    d2 = cfl_pipe(test_files, True)
+    d2 = MultiThreadMapData(d2, num_thread=config['num_thread'], map_func=map_f,  buffer_size=nr_elm*10, strict=True)
+    test_pipe = BatchData(d2, nr_elm, use_list=False)
+
+    go = trainer(train_pipe, test_pipe, config)
     utils.log_to(os.path.join(go.log_path, 'config.yaml'), [utils.get_timestamp(), "The training is starting"], prefix="#")
     go.train()
     utils.log_to(os.path.join(go.log_path, 'config.yaml'), [utils.get_timestamp(), "The training is ending"], prefix="#")
