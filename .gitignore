@@ -13,3 +13,4 @@ data
 old_compare_priors
 trn_size
 tmp
+*.pyc
