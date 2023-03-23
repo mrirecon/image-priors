@@ -20,8 +20,12 @@ NUM_FILES=$((FILE_BATCHES*NUM_GPUS))
 pop_lines()
 {
     # usage pop the first $1 lines from the file $2 to the file $3
-    head -n$1 $2 > $3
-    sed -i -e "1,${1}d" $2
+    if test -n "$(head -n1 $2 | grep stop)" ; then
+        > $3
+    else
+        head -n$1 $2 > $3
+        sed -i -e "1,${1}d" $2
+    fi
 }
 
 job()
