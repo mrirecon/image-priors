@@ -21,9 +21,13 @@ acc=3
 vcc=10
 pics_lambda=5
 nlinv_lambda=5
+nlinv_lambda_dp=0.25
 reg_iter=4
 max_iter=11
-redu=2.5
+dp_max_iter=13
+dp_redu=2.5
+dp_reg_iter=3
+redu=3
 start=70
 end=150
 
@@ -35,7 +39,7 @@ dat=/home/ague/archive/vol/2023-02-17_MRT5_DCRD_0015/meas_MID00020_FID75992_t1_m
 GRAPH1=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_abide
 GRAPH2=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_abide_filtered
 GRAPH3=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_hku
-
+GRAPH4=/home/gluo/workspace/nlinv_prior/logs/exported/sde_abide/sde_abide
 
 # read dat file
 # and restore the normal grid and remove oversampling
@@ -50,12 +54,12 @@ if [ ! -f kdat.cfl ]; then
     bart cc -p $vcc kdat_256 ckdat_256
     bart fft -i $(bart bitmask 2) ckdat_256 kdat_xy
     rm tmp.* kdat__.* kdat_.* kdat_256.*
-fi
 
-bart upat -Y256 -Z256 -y$acc -z1 -c30 mask
-bart transpose 0 1 mask mask
-bart transpose 1 2 mask mask
-bart fmac mask kdat_xy kdat_xy_u
+    bart upat -Y256 -Z256 -y$acc -z1 -c30 mask
+    bart transpose 0 1 mask mask
+    bart transpose 1 2 mask mask
+    bart fmac mask kdat_xy kdat_xy_u
+fi
 
 pics()
 {
@@ -64,13 +68,23 @@ pics()
 
 nlinv()
 {
-    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
+    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu \
+    --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4\
+    $3_nlinv_$2 $3_nlinv_coils_$2
+}
+
+dp_nlinv()
+{
+    bart nlinv -g -a650 -b44 -i13 -C50 -r$dp_redu --reg-iter=$dp_reg_iter \
+    --dp sigma-max=1.,sigma-min=0.01,K=1,T=100,start-step=100 \
+    -R DP:{$1}:$nlinv_lambda_dp:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
 }
 
 for num in $(seq $start $end)
 do
 tmp_slice=$(mktemp /tmp/slice-script.XXXXXX)
 tmp_coils=$(mktemp /tmp/coils-script.XXXXXX)
+
 bart slice 2 $num kdat_xy_u $tmp_slice
 bart ecalib -r 20 -m1 -c 0.001 $tmp_slice $tmp_coils
 
@@ -87,6 +101,7 @@ bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:
 nlinv $GRAPH1 $num abide $tmp_slice
 nlinv $GRAPH2 $num abide_f $tmp_slice
 nlinv $GRAPH3 $num hku $tmp_slice
+dp_nlinv $GRAPH4 $num a_dp $tmp_slice
 done
 
 # expect the worst reconstruction without any prior knowledge
@@ -127,6 +142,7 @@ concatenate l2_pics
 concatenate abide_nlinv
 concatenate abide_f_nlinv
 concatenate hku_nlinv
+concatenate a_dp_nlinv
 concatenate l2_nlinv
 concatenate l1_nlinv
 concatenate nlinv
