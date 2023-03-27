@@ -3,7 +3,6 @@
 # Be careful with this script, it might modify the shared filelist 
 # at the same time from different workstation even the chance of this is low.
 # The chance of this is lower when the running time of one single job is longer.
-# usage bash mk_prior.sh 
 
 set -e
 export TF_CPP_MIN_LOG_LEVEL=3
