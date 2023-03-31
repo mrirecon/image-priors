@@ -88,7 +88,7 @@ def main(config_path):
 
     def aug_load_file(x):
         x = np.mean(load_file(x), axis=0, keepdims=True)
-        x = np.squeeze(flip_and_rotate(x, np.random.randint(1,9,1)[0]))
+        x = np.squeeze(flip_and_rotate(x, 8))
         return x
 
     def randint(x, dtype='int32'):
@@ -127,10 +127,12 @@ def main(config_path):
     test_pipe = BatchData(d2, nr_elm, use_list=False)
 
     go = trainer(train_pipe, test_pipe, config)
-    utils.log_to(os.path.join(go.log_path, 'config.yaml'), [utils.get_timestamp(), "The training is starting"], prefix="#")
+    utils.log_to(os.path.join(go.log_path, 'train_files'), train_files)
+    utils.log_to(os.path.join(go.log_path, 'test_files'), test_files)
+    utils.log_to(os.path.join(go.log_path, 'train_info'), [utils.get_timestamp() + ", the training is starting"])
     go.train()
-    utils.log_to(os.path.join(go.log_path, 'config.yaml'), [utils.get_timestamp(), "The training is ending"], prefix="#")
-    utils.color_print('TRAINING FINISHED')
+    utils.log_to(os.path.join(go.log_path, 'train_info'), [utils.get_timestamp() + ", the training is ending"])
+    utils.color_print('TRAINING FINISHED at ' + utils.get_timestamp())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
