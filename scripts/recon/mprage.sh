@@ -3,146 +3,61 @@ set -e
 
 export TF_FORCE_GPU_ALLOW_GROWTH=true
 export TF_CPP_MIN_LOG_LEVEL=3
-export TF_NUM_INTEROP_THREADS=4
-export TF_NUM_INTRAOP_THREADS=4
+export TF_NUM_INTEROP_THREADS=10
+export TF_NUM_INTRAOP_THREADS=10
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
 
-if [[ -z "${WORKSPACE}" ]]; then
-    WORKSPACE=/scratch_radon/gluo/mprage
-else
-    echo "The variable WORKSPACE exists"
-fi
+
+WORKSPACE=/scratch_radon/gluo/mprage
 echo "Working in the folder $WORKSPACE"
 
-#
-acc=3
-vcc=10
-pics_lambda=5
-nlinv_lambda=5
-nlinv_lambda_dp=0.25
-reg_iter=4
-max_iter=11
-dp_max_iter=13
-dp_redu=2.5
-dp_reg_iter=3
-redu=3
-start=70
-end=150
-
-folder=redu_${redu}_${nlinv_lambda}_${pics_lambda}_$acc
-mkdir -p $WORKSPACE/$folder
-cd $WORKSPACE/$folder
+mkdir -p $WORKSPACE/3D
+cd $WORKSPACE/3D
 
 dat=/home/ague/archive/vol/2023-02-17_MRT5_DCRD_0015/meas_MID00020_FID75992_t1_mprage_tra_p2_iso.dat 
-GRAPH1=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_abide
-GRAPH2=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_abide_filtered
-GRAPH3=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn_hku
-GRAPH4=/home/gluo/workspace/nlinv_prior/logs/exported/sde_abide/sde_abide
 
 # read dat file
 # and restore the normal grid and remove oversampling
 if [ ! -f kdat.cfl ]; then
+    
     bart twixread -A $dat kdat
     bart zeros 4 108 282 224 16 tmp
     bart join 0 tmp kdat kdat_
     bart reshape $(bart bitmask 0 4) 2 256 kdat_ tmp
     bart avg $(bart bitmask 0) tmp kdat__
     bart transpose 0 4 kdat__ kdat_
-    bart resize -c 1 256 kdat_ kdat_256
-    bart cc -p $vcc kdat_256 ckdat_256
-    bart fft -i $(bart bitmask 2) ckdat_256 kdat_xy
-    rm tmp.* kdat__.* kdat_.* kdat_256.*
 
-    bart upat -Y256 -Z256 -y$acc -z1 -c30 mask
-    bart transpose 0 1 mask mask
-    bart transpose 1 2 mask mask
-    bart fmac mask kdat_xy kdat_xy_u
+    bart poisson -Y282 -Z224 -y1.2 -z1.2 -v -C25 mask
+    bart fmac mask kdat_ kdat_u
+
+    bart ecalib -r 25 -c 0.00001 -m1 kdat_u coils
+
+    bart fft -i $(bart bitmask 0 1 2) kdat_ coil_imgs
+    bart rss $(bart bitmask 3) coil_imgs rss
+    bart fmac -C -s $(bart bitmask 3) coil_imgs coils coil_comb
+    bart pics -g -d4 -l1 -r0.01 -i100 kdat_u coils l1_pics
+    bart pics -g -d4 -l1 -r0.01 -i100 kdat_ coils l1_pics_all
 fi
 
-pics()
+EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/create_graph.py
+total=224
+batches=1
+batch_size=224
+log=/home/gluo/workspace/nlinv_prior/logs/20230331-145248
+meta=sde_abide_50
+path=/home/gluo/workspace/nlinv_prior/logs/exported/test
+
+export_graph()
 {
-    bart pics -g -i80 -R TF:{$1}:$pics_lambda $4 $5 $3_pics_$2
+python $EXPR $total $batches $batch_size $log $meta $path $1 $2 $1 MPRAGE
 }
 
-nlinv()
-{
-    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu \
-    --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4\
-    $3_nlinv_$2 $3_nlinv_coils_$2
-}
-
-dp_nlinv()
-{
-    bart nlinv -g -a650 -b44 -i13 -C50 -r$dp_redu --reg-iter=$dp_reg_iter \
-    --dp sigma-max=1.,sigma-min=0.01,K=1,T=100,start-step=100 \
-    -R DP:{$1}:$nlinv_lambda_dp:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
-}
-
-for num in $(seq $start $end)
+declare -a types=("log" "linear")
+for type in "${types[@]}"
 do
-tmp_slice=$(mktemp /tmp/slice-script.XXXXXX)
-tmp_coils=$(mktemp /tmp/coils-script.XXXXXX)
-
-bart slice 2 $num kdat_xy_u $tmp_slice
-bart ecalib -r 20 -m1 -c 0.001 $tmp_slice $tmp_coils
-
-# pics
-bart pics -g -l1 -r 0.02 $tmp_slice $tmp_coils l1_pics_$num
-bart pics -g -l2 -r 0.02 $tmp_slice $tmp_coils l2_pics_$num
-pics $GRAPH1 $num abide $tmp_slice $tmp_coils
-pics $GRAPH2 $num abide_f $tmp_slice $tmp_coils
-pics $GRAPH3 $num hku $tmp_slice $tmp_coils
-
-# nlinv
-bart nlinv -g -a660 -b44 -i10 -r2 $tmp_slice l2_nlinv_$num l2_nlinv_coils_$num
-bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice l1_nlinv_$num l1_nlinv_coils_$num
-nlinv $GRAPH1 $num abide $tmp_slice
-nlinv $GRAPH2 $num abide_f $tmp_slice
-nlinv $GRAPH3 $num hku $tmp_slice
-dp_nlinv $GRAPH4 $num a_dp $tmp_slice
+    export_graph $type SDE
+    GRAPH=$path/$type
+    bart pics -g -d4 -R DP:{$GRAPH}:0.15:50 -i50 kdat_u coils dp_pics_$type
 done
-
-# expect the worst reconstruction without any prior knowledge
-bart fft -i $(bart bitmask 0 1) kdat_xy_u cimgs
-bart rss $(bart bitmask 3) cimgs zero_filled
-bart extract 2 $start $(($end + 1)) zero_filled czero_filled
-
-# expect the best reconstruction from the most k-space data using pics
-bart ecalib -r 20 -m1 ckdat_256 coils
-bart pics -g -l1 -r 0.02 ckdat_256 coils volume
-bart extract 2 $start $(($end + 1)) volume cvolume
-
-# expect the best reconstruction from the most k-space data using nlinv
-for num in $(seq $start $end)
-do
-tmp_slice=$(mktemp /tmp/abc-script.XXXXXX)
-bart slice 2 $num kdat_xy $tmp_slice
-bart nlinv -g -a660 -b44 -i$max_iter -C50 -r2 --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice nlinv_$num nlinv_coils_$num
-done
-
-# concatenate slices
-concatenate()
-{
-s1=""
-for num in $(seq $start $end)
-do
-    s1=$s1$1_$num" "
-done
-bart join 2 $s1 $1_volume
-}
-
-
-concatenate abide_pics
-concatenate abide_f_pics
-concatenate hku_pics
-concatenate l1_pics
-concatenate l2_pics
-concatenate abide_nlinv
-concatenate abide_f_nlinv
-concatenate hku_nlinv
-concatenate a_dp_nlinv
-concatenate l2_nlinv
-concatenate l1_nlinv
-concatenate nlinv
