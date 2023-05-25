@@ -32,43 +32,21 @@ e = exporter(log, meta, path, name, sigma_type=sigm, default_out=False, sigma_ma
 if seq == '2DMAG':
 
     x = tf.placeholder(tf.float32, shape=[1, 256, 256, 2], name="input_0")
-    t = tf.placeholder(tf.float32, shape=[1], name="input_1")
-    if prior == 'SDE' or prior == 'SDE2':
-        m = tf.placeholder(tf.float32, shape=[1], name="input_2")
 
-    #x_mag      = tf.math.sqrt(tf.math.reduce_sum(tf.math.square(x), axis=(3), keepdims=True))
-    #x_mag_max  = tf.math.reduce_max(x_mag, axis=(1,2), keepdims=True)
     x_cplx = tf.complex(x[..., 0], x[..., 1])
     x_mag  = tf.abs(x_cplx)[..., tf.newaxis]
-    #x_mag_normed   = x_mag/(x_mag_max+1e-10)
-    #x_cplx_normed  = tf.concat([x_mag_normed*tf.cos(x_angle), x_mag_normed*tf.sin(x_angle)], axis=-1)
 
     logits = e.model.eval(x_mag)
     loss   = e.model.loss_func(x_mag, logits) / np.log(2.0) / np.prod(e.model.config['input_shape'])
-    grad   = tf.squeeze(tf.gradients(loss, x))[tf.newaxis, ...]
-
-    x_out = x - t*grad
 
 
 
 if seq == '2DCPLX':
 
     x = tf.placeholder(tf.float32, shape=[1, 256, 256, 2], name="input_0")
-    t = tf.placeholder(tf.float32, shape=[1], name="input_1")
-    if prior == 'SDE' or prior == 'SDE2':
-        m = tf.placeholder(tf.float32, shape=[1], name="input_2")
 
-    cplx_x = tf.complex(x[..., 0], x[..., 1])
-    x_mag  = tf.abs(cplx_x)[..., tf.newaxis]
-    x_mag_max  = tf.math.reduce_max(x_mag, axis=(1,2), keepdims=True)
-    x_normed  = x/(x_mag_max+1e-16)
+    logits = e.model.eval(x)
+    loss   = e.model.loss_func(x, logits) / np.log(2.0) / np.prod(e.model.config['input_shape'])
 
-    logits = e.model.eval(x_normed)
-    loss   = e.model.loss_func(x_normed, logits) / np.log(2.0) / np.prod(e.model.config['input_shape'])
-    grad    = tf.squeeze(tf.gradients(loss, x_normed))[tf.newaxis, ...]
-    x_updated = x_normed - t*grad
 
-    x_out = x_updated*(x_mag_max+1e-16)
-
-assert x_out.shape == x.shape
-e.export([x, t, m] if prior == 'SDE' or prior == 'SDE2' else [x, t], [x_out])
+e.export([x], [loss], attach_gradients=True)
