@@ -10,8 +10,8 @@ This folder contains the script to perform the following workflow proposed in ou
 <img src="overview-1.png" alt="workflow" width="350"/>
 
 # Related repositories
-1. [bart](https://github.com/mrirecon/spreco)
-2. [spreco](https://github.com/mrirecon/bart)
+1. [bart](https://github.com/mrirecon/bart)
+2. [spreco](https://github.com/mrirecon/spreco)
 3. [bart tutorials](https://github.com/mrirecon/bart-workshop)
 
 
