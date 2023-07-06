@@ -1,6 +1,6 @@
-This folder contains the script to performed the workflow proposed in the paper titled "Generative Pre-trained Image Prior for Fast MRI Reconstruction"
+This folder contains the script to perform the workflow proposed in the paper titled "Generative Image Priors for MRI Reconstruction Trained from Magnitude-Only Images"
 
-<img src="figures/overview-1.png" alt="workflow" width="200"/>
+<img src="overview-1.png" alt="workflow" width="200"/>
 
 1. [preprocess dataset](scripts/augmentation/readme.md)
 2. [phase augmentation](scripts/augmentation/readme.md)
