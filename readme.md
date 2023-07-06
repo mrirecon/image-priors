@@ -5,6 +5,8 @@ This folder contains the script to perform the workflow proposed in the paper ti
 3. [Train generative priors](./scripts/train/readme.md)
 4. [Image reconstruction with priors](./scripts/recon/readme.md)
 
+1. [Preprocess dataset](./scripts/augmentation)
+
 <img src="overview-1.png" alt="workflow" width="350"/>
 
 
