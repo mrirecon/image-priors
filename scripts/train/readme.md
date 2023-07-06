@@ -1,1 +1,1 @@
-#train
+## Train generative priors

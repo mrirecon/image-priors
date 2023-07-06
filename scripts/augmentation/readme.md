@@ -5,7 +5,7 @@ Please go to the webpage for [Autism Brain Imaging Data Exchange (ABIDE)](https:
 python preprocess.py --folder={the folder contains the nii files} --savepath={where you want to save preprocessed images}
 ```
 
-## phase augmentation
+## Phase augmentation
 Before performing phase augmentation, make sure you have installed library [spreco](https://github.com/mrirecon/spreco) and download models from this [zenodo page](https://zenodo.org/record/6521188)
 ```shell
 wget https://zenodo.org/record/6521188/files/models.tar
