@@ -2,11 +2,11 @@
 
 path=/home/ague/data/gluo/dataset/abide_2/train
 pattern="abide_*.hdr"
-tmp=/home/gluo/workspace/nlinv_prior/data/abide/tmp
-train_list=/home/gluo/workspace/nlinv_prior/data/abide/train
-test_list=/home/gluo/workspace/nlinv_prior/data/abide/test
+filelist=/tmp/filelist
+train_list=/tmp/train
+test_list=/tmp/test
 
-#find $path -name $pattern | grep -v "mag_re" | sort > $tmp
+#find $path -name $pattern | grep -v "mag_re" | sort > $filelist
 
 nr_files=$(cat $tmp | wc -l)
 

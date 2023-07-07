@@ -35,8 +35,8 @@ log_folder: /home/gluo/workspace/nlinv/logs
 
 num_prepare: 10
 print_loss: True
-train_list: /home/gluo/workspace/nlinv/scripts/data/abide/abide_train_p
-test_list: /home/gluo/workspace/nlinv/scripts/data/abide/abide_test_p
+train_list: /tmp/train
+test_list: /tmp/test
 
 nr_gpu: 3
 gpu_id: '0,1,2'
