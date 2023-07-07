@@ -29,8 +29,6 @@ read -p 'Select undersampling pattern.
 PATTERN=${PATTERN:-1d}
 
 GRAPH1=$ROOT_PATH/logs/exported/pixelcnn/pixelcnn_abide
-GRAPH2=$ROOT_PATH/logs/exported/pixelcnn/pixelcnn_abide_filtered
-GRAPH3=$ROOT_PATH/logs/exported/pixelcnn/pixelcnn_hku
 
 DATA_PATH=$ROOT_PATH/data/kspaces/mprage
 
@@ -65,11 +63,7 @@ bart fmac -C -s$(bart bitmask 3) coilimgs coilsen zero_filled
 bart pics -g -l2 -r 0.01 und_kspace coilsen l2_pics
 bart pics -g -l1 -r 0.01 und_kspace coilsen l1_pics
 bart pics -g -i100 -d4 -R TF:{$GRAPH1}:0.8 und_kspace coilsen prior_abide_pics
-bart pics -g -i100 -d4 -R TF:{$GRAPH2}:0.8 und_kspace coilsen prior_abide_filtered_pics
-bart pics -g -i100 -d4 -R TF:{$GRAPH3}:0.8 und_kspace coilsen prior_hku_pics
 
 bart nlinv -g -d4 -a660 -b44 -i14 -C50 und_kspace nlinv nlinv_coils
 bart nlinv -g -d4 -a660 -b44 -i15 -C50 --reg-iter=5 -R W:3:0:0.1 und_kspace l1_nlinv l1_nlinv_coils
 bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH1}:0.8:1 und_kspace prior_abide_nlinv prior_abide_nlinv_coils
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH2}:0.8:1 und_kspace prior_abide_filtered_nlinv prior_abide_filtered_nlinv_coils
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH3}:0.8:1 und_kspace prior_hku_nlinv prior_hku_nlinv_coils
