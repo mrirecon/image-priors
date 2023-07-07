@@ -68,7 +68,7 @@ if seq == 'MPRAGE':
         x_normed_T   = x_resize_T*(scale+1e-10)
         return x_normed_T
 
-## squence -> t1_tfl3d_ns_sag_TI900_FA9
+## sequence -> t1_tfl3d_ns_sag_TI900_FA9
 
 if seq == 'TFL3D':
 

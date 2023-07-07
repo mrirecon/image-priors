@@ -25,4 +25,5 @@ GRAPH=$path/$name
 bart pics -g -i100 -d4 -R TF:{$GRAPH}:0.8 und_kspace coilsen prior_abide_pics
 ```
 
+If you are interested in deep experience with our prior, you can generate a raw 3D k-space with sequence `t1_tfl3d_ns_sag_TI900_FA9` on a SIEMENS scanner and reconstruct image from it with [tfl3d.sh](tfl3d.sh).
 
