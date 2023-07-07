@@ -10,7 +10,7 @@ Before performing phase augmentation, make sure you have downloaded models from 
 ```shell
 wget https://zenodo.org/record/6521188/files/models.tar
 ```
-and make sure you create a list of files like [below](../../mics/filelist/abide_magnitude_list) after the data preparation step
+and make sure you create a list of files like [below](../../misc/filelist/abide_magnitude_list) after the data preparation step
 
 ```txt
 ./dataset/abide_2/train/abide_1000000.npz
