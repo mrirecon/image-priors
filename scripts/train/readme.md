@@ -1,6 +1,6 @@
 ## Train generative priors
 
-Use [train.sh](train.sh) to train your generative priors. Before that, please prepare a list of files like below for your dataset. This dataset contains the complex images that are obtained after phase augmentation.
+Use [train.sh](train.sh) to train your generative priors. Before execution, please prepare a list of files like below for your dataset. This dataset contains the complex images that are obtained after phase augmentation.
 
 ```txt
 ../abide_2/train/abide_1000000.hdr
