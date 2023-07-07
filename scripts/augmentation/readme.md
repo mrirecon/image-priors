@@ -1,16 +1,16 @@
 ## Data preparation
 
-Please go to the webpage for [Autism Brain Imaging Data Exchange (ABIDE)](https://fcon_1000.projects.nitrc.org/indi/abide/) and download the dataset that contains nii files. Then use program `preprocess.py` to preprocess them.
+Please go to the webpage for [Autism Brain Imaging Data Exchange (ABIDE)](https://fcon_1000.projects.nitrc.org/indi/abide/) and download the dataset that contains nii files. Before using program `preprocess.py` to preprocess them, make sure you have installed library [spreco](https://github.com/mrirecon/spreco).
 ```shell
 python preprocess.py --folder={the folder contains the nii files} --savepath={where you want to save preprocessed images}
 ```
 
 ## Phase augmentation
-Before performing phase augmentation, make sure you have installed library [spreco](https://github.com/mrirecon/spreco) and downloaded models from this [zenodo page](https://zenodo.org/record/6521188)
+Before performing phase augmentation, make sure you have downloaded models from this [zenodo page](https://zenodo.org/record/6521188)
 ```shell
 wget https://zenodo.org/record/6521188/files/models.tar
 ```
-Make sure you create a list of files like below after the data preparation step
+and make sure you create a list of files like below after the data preparation step
 
 ```txt
 ./dataset/abide_2/train/abide_1000000.npz

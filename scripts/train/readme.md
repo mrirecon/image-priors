@@ -1,6 +1,6 @@
 ## Train generative priors
 
-Use [train.sh](train.sh) to train your generative priors. Before that, please prepare a list of files for your dataset like below. This dataset contains the complex images that are obtained after phase augmentation.
+Use [train.sh](train.sh) to train your generative priors. Before that, please prepare a list of files like below for your dataset. This dataset contains the complex images that are obtained after phase augmentation.
 
 ```txt
 ../abide_2/train/abide_1000000.hdr
@@ -9,7 +9,7 @@ Use [train.sh](train.sh) to train your generative priors. Before that, please pr
 ../abide_2/train/abide_1000003.hdr
 ```
 
-The command [find](https://linuxize.com/post/how-to-find-files-in-linux-using-the-command-line/) could help you to create a list of files.
+The command [find](https://linuxize.com/post/how-to-find-files-in-linux-using-the-command-line/) could help you to create such a list of files.
 
 ```shell
 folder=/path/to/folder/that/contains/complex/images
