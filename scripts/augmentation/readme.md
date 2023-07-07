@@ -19,11 +19,16 @@ and make sure you create a list of files like below after the data preparation s
 ./dataset/abide_2/train/abide_1000003.npz
 ```
 
-Then use program `aug_phase.sh` to start augmentation tasks. Before that, please check if the following things are correct
+Then use program `aug_phase.sh` to start augmentation tasks. Before that, please check if the following things in [phase_abide.yaml](../configs/phase_abide.yaml) are correct
 
-1. `model_folder` in scripts/configs/phase_abide.yaml
-2. `model_name` in scripts/configs/phase_abide.yaml
-3. `save_path` in scripts/configs/phase_abide.yaml
-4. `FILELIST` in scripts/augmentation/aug_phase.sh
+1. specify where the downloaded model is with `model_folder` 
+2. specify which model to use with `model_name` 
+3. specify where to save the phase-augmented images with `save_path` 
 
+and the following things in [aug_phase.sh](aug_phase.sh)
 
+1. specify the location of config file with `CONFIG`
+2. specify the location of the list of files with `FILELIST`
+3. the [runner](runner) can parallelize your jobs, specify the number of GPU available with `NUM_GPUS` and `GPU_IDS`
+4. if your GPU has a not sufficient memory, reduce `FILE_BATCHES`
+5. specify your tmp_list with `TMP`
