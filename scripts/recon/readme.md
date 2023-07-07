@@ -3,7 +3,7 @@
 Congrats 😃, you get to the final step. Before performing the reconstruction task, make sure you have installed [bart](https://github.com/mrirecon/bart) toolbox properly with TensorFlow graph support.
 We prepare a [tutorial](https://github.com/mrirecon/bart-workshop/tree/master/ismrm2021) to present how to create a regularization term with TensorFlow and use it for image reconstruction in BART.
 
-If you'd like to have a quick tryout with our priors, you could get priors from this huggingface [page](https://huggingface.co/Guanxiong/MRI-Image-Priors) or [zenodo](n)
+If you'd like to have a quick tryout with our priors, you could get priors from this huggingface [page](https://huggingface.co/Guanxiong/MRI-Image-Priors) or [zenodo](https://zenodo.org/record/8083750)
 
 We have two main steps to improve reconstruction with your priors. Firstly, export your trained model as computation graph for BART; then, use `pics` or `nlinv` command in BART with the exported graph as regularization. We provide an [example](2d_example.sh) for 2D reconstruction.
 
