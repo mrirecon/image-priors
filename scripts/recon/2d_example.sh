@@ -1,5 +1,10 @@
 #!/bin/bash
-# compare priors that are trained on different datasets
+# 
+# Copyright 2023. Uecker Lab. University Medical Center Göttingen.
+# All rights reserved.
+
+# Authors:
+# Guanxiong Luo
 
 set -e 
 
@@ -8,11 +13,22 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 
 if [[ -z "${ROOT_PATH}" ]]; then
-    ROOT_PATH=/home/gluo/workspace/nlinv_prior
-    echo "Using the root path set by this shell script"
+    ROOT_PATH=$(pwd)/../../
+    echo "Working in the folder $ROOT_PATH"
 else
     echo "Working in the folder $ROOT_PATH"
 fi
+
+## export graph
+
+log=../../MRI-Image-Priors/PixelCNN/cplx_large
+meta=pixelcnn
+path=../../MRI-Image-Priors/exported/cplx_large
+name=pixelcnn_cplx_large
+python 2d_pixelcnn.py $log $meta $path $name PIXELCNN none 2DCPLX
+GRAPH=$path/$name
+
+## perform reconstruction
 
 # variables for sampling patter
 nx=256
@@ -27,8 +43,6 @@ read -p 'Select undersampling pattern.
          2d is 2d pattern,
          po is poisson disc [1d]: ' PATTERN
 PATTERN=${PATTERN:-1d}
-
-GRAPH1=$ROOT_PATH/logs/exported/pixelcnn/pixelcnn_abide
 
 DATA_PATH=$ROOT_PATH/data/kspaces/mprage
 
@@ -62,8 +76,8 @@ bart fmac -C -s$(bart bitmask 3) coilimgs coilsen zero_filled
 
 bart pics -g -l2 -r 0.01 und_kspace coilsen l2_pics
 bart pics -g -l1 -r 0.01 und_kspace coilsen l1_pics
-bart pics -g -i100 -d4 -R TF:{$GRAPH1}:0.8 und_kspace coilsen prior_abide_pics
+bart pics -g -i100 -d4 -R TF:{$GRAPH}:0.8 und_kspace coilsen prior_abide_pics
 
 bart nlinv -g -d4 -a660 -b44 -i14 -C50 und_kspace nlinv nlinv_coils
 bart nlinv -g -d4 -a660 -b44 -i15 -C50 --reg-iter=5 -R W:3:0:0.1 und_kspace l1_nlinv l1_nlinv_coils
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH1}:0.8:1 und_kspace prior_abide_nlinv prior_abide_nlinv_coils
+bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH}:0.8:1 und_kspace prior_abide_nlinv prior_abide_nlinv_coils

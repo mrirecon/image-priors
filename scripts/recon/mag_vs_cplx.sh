@@ -65,7 +65,7 @@ bart pics -g -l1 -r 0.01 und_kspace coilsen l1_pics
 bart nlinv -g $DATA_PATH nlinv_grd
 bart nlinv -g und_kspace zero_filled_nlinv
 
-EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/2d_pixelcnn.py
+EXPR=2d_pixelcnn.py
 log=/home/gluo/workspace/nlinv_prior/logs/20230522-161113
 meta=pixelcnn_500
 path=/home/gluo/workspace/nlinv_prior/logs/exported/test
