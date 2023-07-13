@@ -2,13 +2,14 @@
 
 This folder includes the scripts that implement the workflow proposed in our paper. This project has a certain capacity to handle a large dataset (~100k images) on a Linux-based platform. It provides functionalities for preprocessing the data and training generative models using the dataset, and it was tested on a local GPUs workstation and HPC cluster. With this project, users can efficiently to extract prior information from large datasets for MRI reconstruction.
 
+
+<img src="./misc/overview.svg" alt="workflow" width="400" align="right"/>
 1. [Preprocess dataset](./scripts/augmentation)
 2. [Phase augmentation](./scripts/augmentation)
 3. [Train generative priors](./scripts/train)
 4. [Image reconstruction with priors](./scripts/recon)
 
-<img src="./misc/overview.svg" alt="workflow" width="350"/>
-
+<br clear="right"/>
 # Related repositories
 1. [bart](https://github.com/mrirecon/bart)
 2. [spreco](https://github.com/mrirecon/spreco)
