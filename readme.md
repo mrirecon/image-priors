@@ -7,7 +7,7 @@ This folder includes the scripts that implement the workflow proposed in our pap
 3. [Train generative priors](./scripts/train)
 4. [Image reconstruction with priors](./scripts/recon)
 
-<img src="./misc/overview.png" alt="workflow" width="350"/>
+<img src="./misc/overview.svg" alt="workflow" width="350"/>
 
 # Related repositories
 1. [bart](https://github.com/mrirecon/bart)
