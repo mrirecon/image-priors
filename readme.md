@@ -4,16 +4,25 @@ This folder includes the scripts that implement the workflow proposed in our pap
 
 
 <img src="./misc/overview.svg" alt="workflow" width="400" align="right"/>
+
+## Workflow
 1. [Preprocess dataset](./scripts/augmentation)
+   
 2. [Phase augmentation](./scripts/augmentation)
+   
 3. [Train generative priors](./scripts/train)
+   
 4. [Image reconstruction with priors](./scripts/recon)
 
-<br clear="right"/>
-# Related repositories
+## Related repositories
 1. [bart](https://github.com/mrirecon/bart)
 2. [spreco](https://github.com/mrirecon/spreco)
 3. [bart tutorials](https://github.com/mrirecon/bart-workshop)
+   
+<br clear="right"/>
+
+
+
 
 
 ## Citation
