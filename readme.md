@@ -14,6 +14,14 @@ This folder includes the scripts that implement the workflow proposed in our pap
    
 4. [Image reconstruction with priors](./scripts/recon)
 
+Highlights
+
+1. Distributed training
+2. Interruptible training
+3. Efficient dataloader for medical images
+4. Customizable models with a configuration file
+5. Parallelized processing
+
 ## Related repositories
 1. [bart](https://github.com/mrirecon/bart)
 2. [spreco](https://github.com/mrirecon/spreco)
