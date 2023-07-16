@@ -1,6 +1,6 @@
 ## Generative Image Priors for MRI Reconstruction Trained from Magnitude-Only Images
 
-This folder includes the scripts that implement the workflow proposed in our paper. This project has a certain capacity to handle a large dataset (~100k images) on a Linux-based platform. It provides functionalities for preprocessing the data and training generative models using the dataset, and it was tested on a local GPUs workstation and HPC cluster. With this project, users can efficiently to extract prior information from large datasets for MRI reconstruction.
+This folder includes the scripts that implement the workflow proposed in our paper. This project has a certain capacity to handle a large dataset (~100k images) on a Linux-based platform. It provides functionalities for preprocessing the data and training generative models using the dataset, and it was tested on a local GPUs workstation and HPC cluster. With this project, users can efficiently to extract prior information from large datasets for MRI reconstruction. Give a quick try with the pretrained priors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggluo/spreco/blob/main/misc/demo_sampler_colab.ipynb)
 
 
 ## Workflow
