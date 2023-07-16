@@ -5,6 +5,7 @@ This folder includes the scripts that implement the workflow proposed in our pap
 
 ## Workflow
 <img src="./misc/overview.png" alt="workflow" width="400" align="right"/>
+
 1. [Preprocess dataset](./scripts/augmentation)
 
    
