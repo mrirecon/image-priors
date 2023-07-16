@@ -3,7 +3,7 @@
 This folder includes the scripts that implement the workflow proposed in our paper. This project has a certain capacity to handle a large dataset (~100k images) on a Linux-based platform. It provides functionalities for preprocessing the data and training generative models using the dataset, and it was tested on a local GPUs workstation and HPC cluster. With this project, users can efficiently to extract prior information from large datasets for MRI reconstruction.
 
 
-<img src="./misc/overview.svg" alt="workflow" width="400" align="right"/>
+<img src="./misc/overview.png" alt="workflow" width="400" align="right"/>
 
 ## Workflow
 1. [Preprocess dataset](./scripts/augmentation)
