@@ -10,8 +10,9 @@ export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
 
 
-WORKSPACE=/scratch_radon/gluo/mprage
+WORKSPACE=$(pwd)/../../results
 echo "Working in the folder $WORKSPACE"
+ROOT_PATH=$(pwd)
 
 mkdir -p $WORKSPACE/3D
 cd $WORKSPACE/3D
@@ -41,13 +42,14 @@ if [ ! -f kdat.cfl ]; then
     bart pics -g -d4 -l1 -r0.01 -i100 kdat_ coils l1_pics_all
 fi
 
-EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/create_graph.py
+models_folder=/home/gluo/workspace/MRI-Image-Priors/Diffusion
+EXPR=$ROOT_PATH/create_graph.py
 total=224
 batches=1
 batch_size=224
-log=/home/gluo/workspace/nlinv_prior/logs/20230331-145248
-meta=sde_abide_50
-path=/home/gluo/workspace/nlinv_prior/logs/exported/test
+log=$models_folder/SMLD
+meta=smld
+path=$models_folder/exported
 
 export_graph()
 {
