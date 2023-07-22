@@ -20,12 +20,12 @@ else
 fi
 
 ## export graph
-
-log=../../MRI-Image-Priors/PixelCNN/cplx_large
+models_folder=/home/gluo/workspace/MRI-Image-Priors/PixelCNN
+log=$models_folder/cplx_large
 meta=pixelcnn
-path=../../MRI-Image-Priors/exported/cplx_large
-name=pixelcnn_cplx_large
-python 2d_pixelcnn.py $log $meta $path $name PIXELCNN none 2DCPLX
+path=$models_folder/exported
+name=cplx_large
+python 2d_pixelcnn.py $log $meta $path $name PIXELCNN none cplx_large
 GRAPH=$path/$name
 
 ## perform reconstruction
@@ -44,7 +44,7 @@ read -p 'Select undersampling pattern.
          po is poisson disc [1d]: ' PATTERN
 PATTERN=${PATTERN:-1d}
 
-DATA_PATH=$ROOT_PATH/data/kspaces/mprage
+DATA_PATH=$ROOT_PATH/misc/kspace/mprage
 
 mkdir -p $ROOT_PATH/results/examples/$PATTERN
 cd $ROOT_PATH/results/examples/$PATTERN

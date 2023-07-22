@@ -8,7 +8,7 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 
 if [[ -z "${ROOT_PATH}" ]]; then
-    ROOT_PATH=/home/gluo/workspace/nlinv_prior
+    ROOT_PATH=$(pwd)/../..
     echo "Using the root path set by this shell script"
 else
     echo "Working in the folder $ROOT_PATH"
@@ -29,7 +29,7 @@ read -p 'Select undersampling pattern.
 PATTERN=${PATTERN:-1d}
 
 
-DATA_PATH=$ROOT_PATH/data/kspaces/mprage
+DATA_PATH=$ROOT_PATH/misc/kspace/mprage
 
 mkdir -p $ROOT_PATH/results/mag/$PATTERN
 cd $ROOT_PATH/results/mag/$PATTERN
@@ -65,19 +65,19 @@ bart pics -g -l1 -r 0.01 und_kspace coilsen l1_pics
 bart nlinv -g $DATA_PATH nlinv_grd
 bart nlinv -g und_kspace zero_filled_nlinv
 
-EXPR=2d_pixelcnn.py
-log=/home/gluo/workspace/nlinv_prior/logs/20230522-161113
-meta=pixelcnn_500
-path=/home/gluo/workspace/nlinv_prior/logs/exported/test
-name=pixelcnn_mag
-python $EXPR $log $meta $path $name PIXELCNN none 2DMAG
-bart pics -g -i100 -d5 -R TF:{$path/$name}:0.1 und_kspace coilsen prior_pics_mag
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace prior_nlinv_mag prior_nlinv_mag_coils
+# where you store the priors
+models_folder=/home/gluo/workspace/MRI-Image-Priors/PixelCNN
+EXPR=$ROOT_PATH/scripts/recon/2d_pixelcnn.py
 
-log=/home/gluo/workspace/nlinv_prior/logs/pixelcnn_hku
-meta=pixelcnn_500
-path=/home/gluo/workspace/nlinv_prior/logs/exported/test
-name=pixelcnn_cplx
-python $EXPR $log $meta $path $name PIXELCNN none 2DCPLX
-bart pics -g -i100 -d5 -R TF:{$path/$name}:0.6 und_kspace coilsen prior_pics_cplx
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace prior_nlinv_cplx prior_nlinv_cplx_coils
+declare -a priors=("cplx_large"  "cplx_small"  "mag_large"  "mag_small")
+
+for prior in "${priors[@]}"
+do
+    log=$models_folder/$prior
+    meta=pixelcnn
+    path=$models_folder/exported
+    name=$prior
+    python $EXPR $log $meta $path $name PIXELCNN none $prior
+    bart pics -g -i100 -d5 -R TF:{$path/$name}:0.1 und_kspace coilsen pics_$prior
+    bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_{$prior}_coils
+done

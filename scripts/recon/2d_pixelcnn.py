@@ -24,12 +24,12 @@ path       = sys.argv[3]
 name       = sys.argv[4]
 prior      = sys.argv[5]
 sigm       = sys.argv[6]
-seq        = sys.argv[7]
-
+cplx       = sys.argv[7]
+cplx       = cplx.split('_')[0]
 
 e = exporter(log, meta, path, name, sigma_type=sigm, default_out=False, sigma_max=0.3, sigma_min=0.01, gpu_id='3')
 
-if seq == '2DMAG':
+if cplx == 'mag':
 
     x = tf.placeholder(tf.float32, shape=[1, 256, 256, 2], name="input_0")
 
@@ -41,7 +41,7 @@ if seq == '2DMAG':
 
 
 
-if seq == '2DCPLX':
+if cplx == 'cplx':
 
     x = tf.placeholder(tf.float32, shape=[1, 256, 256, 2], name="input_0")
 
