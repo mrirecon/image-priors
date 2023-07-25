@@ -59,11 +59,12 @@ bart fmac -C -s$(bart bitmask 3) coilimgs coilsen grd
 bart fft -i 3 und_kspace coilimgs
 bart fmac -C -s$(bart bitmask 3) coilimgs coilsen zero_filled
 
-bart pics -g -l2 -r 0.01 und_kspace coilsen l2_pics
-bart pics -g -l1 -r 0.01 und_kspace coilsen l1_pics
+bart pics -g -S -l2 -r 0.01 und_kspace coilsen l2_pics
+bart pics -g -S -l1 -r 0.01 und_kspace coilsen l1_pics
 
-bart nlinv -g $DATA_PATH nlinv_grd
-bart nlinv -g und_kspace zero_filled_nlinv
+bart nlinv -g -S $DATA_PATH nlinv_grd
+bart nlinv -g -S und_kspace zero_filled_nlinv
+bart nlinv -g -S -a660 -b44 -i12 -C50 --reg-iter=3 -R W:3:0:0.1 und_kspace l1_nlinv
 
 # where you store the priors
 models_folder=/home/gluo/workspace/MRI-Image-Priors/PixelCNN
@@ -78,6 +79,6 @@ do
     path=$models_folder/exported
     name=$prior
     python $EXPR $log $meta $path $name PIXELCNN none $prior
-    bart pics -g -i100 -d5 -R TF:{$path/$name}:0.1 und_kspace coilsen pics_$prior
-    bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_{$prior}_coils
+    bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.6 und_kspace coilsen pics_$prior
+    bart nlinv -g -S -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_${prior}_coils
 done
