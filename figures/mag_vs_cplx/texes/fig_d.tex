@@ -1,0 +1,33 @@
+\begin{tikzpicture}
+    \node[] (fig) at (0,0){
+    \renewcommand{\arraystretch}{0}
+
+\begin{tabular}{c @{\hskip -0.3pt} c @{\hskip -0.3pt} c @{\hskip -0.3pt} c@{\hskip -0.3pt} c@{\hskip -0.3pt} c}
+    $\ell_2$ & \texttt{P}\textsubscript{SM} & \texttt{P}\textsubscript{LM} & \texttt{P}\textsubscript{SC} & \texttt{P}\textsubscript{LC} & Reference\\
+    \\[0.3em]
+    \includegraphics[width=0.25\textwidth, origin=c]{zero_filled_nlinv_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_mag_small_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_mag_large_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_cplx_small_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_cplx_large_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{grd_.png}\\
+    \includegraphics[width=0.25\textwidth, origin=c]{zero_filled_nlinv_phase_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_mag_small_phase_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_mag_large_phase_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_cplx_small_phase_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_cplx_large_phase_1d_.png}&
+    \includegraphics[width=0.25\textwidth, origin=c]{nlinv_grd_phase_.png}
+\end{tabular}};
+\node[right] (B) at (-9, -0.05) {{\color{white!90}  37.66dB}};
+\node[node distance=0.25\textwidth, right of=B] (B) {{\color{white!90} 39.14dB}};
+\node[node distance=0.25\textwidth, right of=B] (B)  {{\color{white!90} 39.52dB}};
+\node[node distance=0.25\textwidth, right of=B] (B)  {{\color{white!90} 44.81dB}};
+\node[node distance=0.25\textwidth, right of=B] (B)  {{\color{white!90} 43.22dB}};
+
+\node[right] (B) at (-7.2, -0.05) {{\color{white!90}  0.9549}};
+\node[node distance=0.25\textwidth, right of=B] (B) {{\color{white!90} 0.8377}};
+\node[node distance=0.25\textwidth, right of=B] (B)  {{\color{white!90} 0.8718}};
+\node[node distance=0.25\textwidth, right of=B] (B) {{\color{white!90} 0.9818}};
+\node[node distance=0.25\textwidth, right of=B] (B)  {{\color{white!90} 0.9688}};
+
+\end{tikzpicture}

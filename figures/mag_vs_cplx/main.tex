@@ -1,0 +1,33 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\graphicspath{{./subfigs}}
+\usepackage[export]{adjustbox}
+
+\pagenumbering{gobble}
+\newlength{\mywidth}
+\newlength{\myheight}
+
+\usepackage{mdframed}
+\mdfdefinestyle{mdstyle}{align=center,innertopmargin=2pt,
+    innerleftmargin=1pt,innerrightmargin=0pt,innerbottommargin=2pt,backgroundcolor=gray!50,linecolor=gray!50}
+\definecolor{gray}{RGB}{220,220,220}
+
+\begin{document}
+\nopagecolor
+\setlength{\tabcolsep}{-1pt}
+
+\begin{mdframed}[style=mdstyle]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{c@{\hskip 0pt} c}
+    \rotatebox[origin=c]{90}{PICS}&\begin{tabular}{c}
+      \input{./texes/figf1.tex}
+    \end{tabular}\\
+    \\[-2em]
+    \rotatebox[origin=c]{90}{NLINV}&\begin{tabular}{c}
+        \input{./texes/figf2.tex}
+    \end{tabular}
+  \end{tabular}}
+\end{mdframed}
+\end{document}
