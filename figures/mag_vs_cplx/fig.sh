@@ -1,6 +1,6 @@
 set -e
 
-dir=/home/jason/gluo_remote/reproduce/image-priors/results/mag
+dir=$(pwd)/../../results/mag
 pattern=("po" "1d" "2d")
 #pattern=("2d")
 
@@ -29,7 +29,7 @@ crop_and_cnvrt2()
     cfl2png -c $1 -A $tmpfile2 $3_crop
 }
 
-declare -a priors=("mag_small" "mag_large"    "cplx_small" "cplx_large" )
+declare -a priors=("mag_small" "mag_large"    "cplx_small" "cplx_large" "SMLD")
 
 if [ 1 == 1 ]; then
 for p in "${pattern[@]}"; do
