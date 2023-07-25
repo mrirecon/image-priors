@@ -67,18 +67,29 @@ bart nlinv -g -S und_kspace zero_filled_nlinv
 bart nlinv -g -S -a660 -b44 -i12 -C50 --reg-iter=3 -R W:3:0:0.1 und_kspace l1_nlinv
 
 # where you store the priors
-models_folder=/home/gluo/workspace/MRI-Image-Priors/PixelCNN
-EXPR=$ROOT_PATH/scripts/recon/2d_pixelcnn.py
+models_folder=/home/gluo/workspace/MRI-Image-Priors
+EXPR=$ROOT_PATH/scripts/recon/2d_graph.py
 
 declare -a priors=("cplx_large"  "cplx_small"  "mag_large"  "mag_small")
 
+
 for prior in "${priors[@]}"
 do
-    log=$models_folder/$prior
+    log=$models_folder/PIXELCNN/$prior
     meta=pixelcnn
-    path=$models_folder/exported
+    path=$models_folder/PIXELCNN/exported
     name=$prior
     python $EXPR $log $meta $path $name PIXELCNN none $prior
     bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.6 und_kspace coilsen pics_$prior
-    bart nlinv -g -S -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R LP:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_${prior}_coils
+    bart nlinv -g -S -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R TF:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_${prior}_coils
 done
+
+
+prior=SMLD
+log=$models_folder/Diffusion/$prior
+meta=smld
+path=$models_folder/Diffusion/exported
+name=$prior
+python $EXPR $log $meta $path $name SMLD log $prior
+bart pics -g -S -i100 -d5 -R DP:{$path/$name}:0.6:100 und_kspace coilsen pics_$prior
+bart nlinv -g -S -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R DP:{$path/$name}:1:50 und_kspace nlinv_$prior nlinv_${prior}_coils
