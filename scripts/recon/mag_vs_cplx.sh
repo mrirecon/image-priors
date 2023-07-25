@@ -80,7 +80,7 @@ do
     path=$models_folder/PixelCNN/exported
     name=$prior
     python $EXPR $log $meta $path $name PixelCNN none $prior
-    if [ $type == cplx_large || $type == cplx_small ]; then
+    if [ "$prior" = "cplx_large" ] || [ "$prior" = "cplx_small" ]; then
     bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.6 und_kspace coilsen pics_$prior
     else
     bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.1 und_kspace coilsen pics_$prior
