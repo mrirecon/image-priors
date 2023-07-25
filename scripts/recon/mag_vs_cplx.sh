@@ -54,7 +54,7 @@ fi
 bart fmac mask $DATA_PATH und_kspace
 bart ecalib -r20 -m1 -c0.001 und_kspace coilsen
 bart fft -i 3 $DATA_PATH coilimgs
-bart fmac -C -s$(bart bitmask 3) coilimgs coilsen grd
+bart pics -g -l2 -r 0.01 -S $DATA_PATH coilsen grd
 
 bart fft -i 3 und_kspace coilimgs
 bart fmac -C -s$(bart bitmask 3) coilimgs coilsen zero_filled
