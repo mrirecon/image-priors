@@ -44,7 +44,7 @@ if [ ! -f kdat.cfl ] ; then
   
 fi
 
-EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/create_graph.py
+EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/3d_graph.py
 total=256
 batches=4
 batch_size=64

@@ -43,7 +43,7 @@ if [ ! -f kdat.cfl ]; then
 fi
 
 models_folder=/home/gluo/workspace/MRI-Image-Priors/Diffusion
-EXPR=$ROOT_PATH/create_graph.py
+EXPR=$ROOT_PATH/3d_graph.py
 total=224
 batches=1
 batch_size=224
