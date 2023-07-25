@@ -64,7 +64,7 @@ pics()
 
 nlinv()
 {
-    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R LP:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
+    bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R TF:{$1}:$nlinv_lambda:1 $4 $3_nlinv_$2 $3_nlinv_coils_$2
 }
 
 for num in $(seq $start $end)

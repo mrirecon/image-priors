@@ -29,7 +29,7 @@ cplx       = cplx.split('_')[0]
 
 e = exporter(log, meta, path, name, sigma_type=sigm, default_out=False, sigma_max=0.3, sigma_min=0.01, gpu_id='3')
 
-if prior == 'PIXELCNN':
+if prior == 'PixelCNN':
 
     if cplx == 'mag':
 

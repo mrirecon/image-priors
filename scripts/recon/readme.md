@@ -15,7 +15,7 @@ log=../../MRI-Image-Priors/PixelCNN/cplx_large  # the folder that has models
 meta=pixelcnn  # the name of a model
 path=../../MRI-Image-Priors/exported/graph
 name=pixelcnn_cplx_large
-python 2d_pixelcnn.py $log $meta $path $name PIXELCNN none 2DCPLX
+python 2d_pixelcnn.py $log $meta $path $name PixelCNN none 2DCPLX
 GRAPH=$path/$name
 
 ...

@@ -75,12 +75,16 @@ declare -a priors=("cplx_large"  "cplx_small"  "mag_large"  "mag_small")
 
 for prior in "${priors[@]}"
 do
-    log=$models_folder/PIXELCNN/$prior
+    log=$models_folder/PixelCNN/$prior
     meta=pixelcnn
-    path=$models_folder/PIXELCNN/exported
+    path=$models_folder/PixelCNN/exported
     name=$prior
-    python $EXPR $log $meta $path $name PIXELCNN none $prior
+    python $EXPR $log $meta $path $name PixelCNN none $prior
+    if [ $type == cplx_large || $type == cplx_small ]; then
     bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.6 und_kspace coilsen pics_$prior
+    else
+    bart pics -g -S -i100 -d5 -R TF:{$path/$name}:0.1 und_kspace coilsen pics_$prior
+    fi
     bart nlinv -g -S -d4 -a660 -b44 -i14 -C50 --reg-iter=3 -R TF:{$path/$name}:0.5:1 und_kspace nlinv_$prior nlinv_${prior}_coils
 done
 

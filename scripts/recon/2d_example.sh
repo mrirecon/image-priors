@@ -25,7 +25,7 @@ log=$models_folder/cplx_large
 meta=pixelcnn
 path=$models_folder/exported
 name=cplx_large
-python 2d_pixelcnn.py $log $meta $path $name PIXELCNN none cplx_large
+python 2d_pixelcnn.py $log $meta $path $name PixelCNN none cplx_large
 GRAPH=$path/$name
 
 ## perform reconstruction
@@ -80,4 +80,4 @@ bart pics -g -i100 -d4 -R TF:{$GRAPH}:0.8 und_kspace coilsen prior_abide_pics
 
 bart nlinv -g -d4 -a660 -b44 -i14 -C50 und_kspace nlinv nlinv_coils
 bart nlinv -g -d4 -a660 -b44 -i15 -C50 --reg-iter=5 -R W:3:0:0.1 und_kspace l1_nlinv l1_nlinv_coils
-bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R LP:{$GRAPH}:0.8:1 und_kspace prior_abide_nlinv prior_abide_nlinv_coils
+bart nlinv -g -d4 -a660 -b44 -i14 -C50 --reg-iter=5 -R TF:{$GRAPH}:0.8:1 und_kspace prior_abide_nlinv prior_abide_nlinv_coils
