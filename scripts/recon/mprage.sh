@@ -9,13 +9,9 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
 
-
-WORKSPACE=$(pwd)/../../results
-echo "Working in the folder $WORKSPACE"
-ROOT_PATH=$(pwd)
-
-mkdir -p $WORKSPACE/3D
-cd $WORKSPACE/3D
+ROOT_PATH=$(pwd)/../..
+mkdir -p $ROOT_PATH/results/MPRAGE
+cd $ROOT_PATH/results/MPRAGE
 
 dat=/home/ague/archive/vol/2023-02-17_MRT5_DCRD_0015/meas_MID00020_FID75992_t1_mprage_tra_p2_iso.dat 
 
@@ -43,7 +39,7 @@ if [ ! -f kdat.cfl ]; then
 fi
 
 models_folder=$ROOT_PATH/MRI-Image-Priors/Diffusion
-EXPR=$ROOT_PATH/3d_graph.py
+EXPR=$ROOT_PATH/scripts/recon/3d_graph.py
 total=224
 batches=1
 batch_size=224
