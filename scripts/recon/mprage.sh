@@ -42,7 +42,7 @@ if [ ! -f kdat.cfl ]; then
     bart pics -g -d4 -l1 -r0.01 -i100 kdat_ coils l1_pics_all
 fi
 
-models_folder=/home/gluo/workspace/MRI-Image-Priors/Diffusion
+models_folder=$ROOT_PATH/MRI-Image-Priors/Diffusion
 EXPR=$ROOT_PATH/3d_graph.py
 total=224
 batches=1

@@ -44,13 +44,14 @@ if [ ! -f kdat.cfl ] ; then
   
 fi
 
+models_folder=$ROOT_PATH/MRI-Image-Priors/Diffusion
 EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/3d_graph.py
 total=256
 batches=4
 batch_size=64
-log=/home/gluo/workspace/nlinv_prior/logs/20230331-145248
-meta=sde_abide_50
-path=/home/gluo/workspace/nlinv_prior/logs/exported/test
+log=$models_folder/SMLD
+meta=smld
+path=$models_folder/exported
 
 export_graph()
 {
