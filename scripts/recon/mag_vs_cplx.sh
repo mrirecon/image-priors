@@ -7,12 +7,7 @@ export TF_CPP_MIN_LOG_LEVEL=3
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 
-if [[ -z "${ROOT_PATH}" ]]; then
-    ROOT_PATH=$(pwd)/../..
-    echo "Using the root path set by this shell script"
-else
-    echo "Working in the folder $ROOT_PATH"
-fi
+ROOT_PATH=$(pwd)/../..
 
 # variables for sampling patter
 nx=256
