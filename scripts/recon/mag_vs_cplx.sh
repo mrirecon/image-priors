@@ -67,7 +67,14 @@ bart nlinv -g -S und_kspace zero_filled_nlinv
 bart nlinv -g -S -a660 -b44 -i12 -C50 --reg-iter=3 -R W:3:0:0.1 und_kspace l1_nlinv
 
 # where you store the priors
-models_folder=/home/gluo/workspace/MRI-Image-Priors
+models_folder=$ROOT_PATH/MRI-Image-Priors
+mkdir -p $models_folder
+cd $models_folder
+wget -nc https://zenodo.org/record/8083750/files/PixelCNN.zip
+wget -nc https://zenodo.org/record/8083750/files/Diffusion.zip
+unzip PixelCNN.zip
+unzip Diffusion.zip
+cd -
 EXPR=$ROOT_PATH/scripts/recon/2d_graph.py
 
 declare -a priors=("cplx_large"  "cplx_small"  "mag_large"  "mag_small")
