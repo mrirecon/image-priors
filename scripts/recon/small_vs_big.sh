@@ -9,12 +9,7 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=3
 export DEBUG_DEVEL=1
 
-if [[ -z "${WORKSPACE}" ]]; then
-    WORKSPACE=/scratch_radon/gluo/mprage
-else
-    echo "The variable WORKSPACE exists"
-fi
-echo "Working in the folder $WORKSPACE"
+ROOT_PATH=$(pwd)/../..
 
 #
 acc=3
@@ -27,15 +22,15 @@ redu=2.5
 start=70
 end=150
 
+graph_folder=$ROOT_PATH/MRI-Image-Priors/PixelCNN/exported
+cplx_small=$graph_folder/cplx_small
+cplx_large=$graph_folder/cplx_large
+
 folder=redu_${redu}_${nlinv_lambda}_${pics_lambda}_$acc
-mkdir -p $WORKSPACE/$folder
-cd $WORKSPACE/$folder
+mkdir -p $ROOT_PATH/results/small/$folder
+cd $ROOT_PATH/results/small/$folder
 
 dat=/home/ague/archive/vol/2023-02-17_MRT5_DCRD_0015/meas_MID00020_FID75992_t1_mprage_tra_p2_iso.dat 
-GRAPH1=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn/pixelcnn_abide
-GRAPH2=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn/pixelcnn_abide_filtered
-GRAPH3=/home/gluo/workspace/nlinv_prior/logs/exported/pixelcnn/pixelcnn_hku
-
 
 # read dat file
 # and restore the normal grid and remove oversampling
@@ -77,16 +72,14 @@ bart ecalib -r 20 -m1 -c 0.001 $tmp_slice $tmp_coils
 # pics
 bart pics -g -l1 -r 0.02 $tmp_slice $tmp_coils l1_pics_$num
 bart pics -g -l2 -r 0.02 $tmp_slice $tmp_coils l2_pics_$num
-pics $GRAPH1 $num abide $tmp_slice $tmp_coils
-pics $GRAPH2 $num abide_f $tmp_slice $tmp_coils
-pics $GRAPH3 $num hku $tmp_slice $tmp_coils
+pics $cplx_small $num cplx_small $tmp_slice $tmp_coils
+pics $cplx_large $num cplx_large $tmp_slice $tmp_coils
 
 # nlinv
 bart nlinv -g -a660 -b44 -i10 -r2 $tmp_slice l2_nlinv_$num l2_nlinv_coils_$num
 bart nlinv -g -a660 -b44 -i$max_iter -C50 -r$redu --reg-iter=$reg_iter -R W:3:0:0.1 $tmp_slice l1_nlinv_$num l1_nlinv_coils_$num
-nlinv $GRAPH1 $num abide $tmp_slice
-nlinv $GRAPH2 $num abide_f $tmp_slice
-nlinv $GRAPH3 $num hku $tmp_slice
+nlinv $cplx_small $num cplx_small $tmp_slice
+nlinv $cplx_large $num cplx_large $tmp_slice
 done
 
 # expect the worst reconstruction without any prior knowledge
@@ -119,14 +112,12 @@ bart join 2 $s1 $1_volume
 }
 
 
-concatenate abide_pics
-concatenate abide_f_pics
-concatenate hku_pics
+concatenate cplx_large_pics
+concatenate cplx_small_pics
 concatenate l1_pics
 concatenate l2_pics
-concatenate abide_nlinv
-concatenate abide_f_nlinv
-concatenate hku_nlinv
+concatenate cplx_large_nlinv
+concatenate cplx_small_pics
 concatenate l2_nlinv
 concatenate l1_nlinv
 concatenate nlinv
