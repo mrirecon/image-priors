@@ -133,8 +133,8 @@ def main(config_path, filelist, gpu_id, file_batches):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--config', metavar='path', default='/home/gluo/workspace/nlinv/scripts/configs/phase_abide.yaml', help='')
-    parser.add_argument('--filelist', metavar='path', default='/home/gluo/workspace/nlinv/scripts/data/curie_filelist_ac', help='')
+    parser.add_argument('--config', metavar='path', help='')
+    parser.add_argument('--filelist', metavar='path', help='')
     parser.add_argument('--gpu_id', metavar='gpu_id', default='0', help='')
     parser.add_argument('--file_batches', metavar='file_batches', type=int, default=2, help='')
 
