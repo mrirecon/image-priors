@@ -9,16 +9,9 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=2
 export DEBUG_DEVEL=1
 
-if [[ -z "${WORKSPACE}" ]]; then
-    WORKSPACE=/scratch_radon/gluo/umg
-    mkdir -p $WORKSPACE
-else
-    echo "The variable WORKSPACE exists"
-    mkdir -p $WORKSPACE
-fi
-
-echo "Working in the folder $WORKSPACE"
-cd $WORKSPACE
+ROOT_PATH=$(pwd)/../..
+mkdir -p $ROOT_PATH/results/tfl3d
+cd $ROOT_PATH/results/tfl3d
 
 ## load and prepare k-space
 dat=/storage/MRT4/BIGDATA/BIGDATA#SMRT4#F39037#M45#D170323#T103009#UE01_t1_tfl3d_ns_sag_TI900_FA9_.dat
@@ -45,7 +38,7 @@ if [ ! -f kdat.cfl ] ; then
 fi
 
 models_folder=$ROOT_PATH/MRI-Image-Priors/Diffusion
-EXPR=/home/gluo/workspace/nlinv_prior/scripts/recon/3d_graph.py
+EXPR=$ROOT_PATH/scripts/recon/3d_graph.py
 total=256
 batches=4
 batch_size=64
