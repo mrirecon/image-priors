@@ -50,31 +50,3 @@ else
     done
     wait
 fi
-
-
-test_flag=false
-if [ $test_flag = true ] ; then
-
-    FILELIST=/home/gluo/workspace/nlinv/scripts/data/test_list
-    TMP=/home/gluo/workspace/nlinv/scripts/data/tmp_list
-
-    job_test()
-    {
-        cat $1 >> validation
-    }
-
-    FILE_BATCHES=10
-    NUM_GPUS=3
-    NUM_FILES=$((FILE_BATCHES*NUM_GPUS))
-    touch validation
-
-    while pop_lines $NUM_FILES $FILELIST $TMP && test -s $TMP
-    do
-        split -a1 -d --lines=$FILE_BATCHES $TMP $TMP
-        for i in $(seq 0 $((NUM_GPUS-1)));
-        do
-            job_test $TMP$i
-        done
-    done
-
-fi
