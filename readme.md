@@ -2,7 +2,7 @@
 
 This folder includes the scripts that implement the workflow proposed in our paper. This project has a certain capacity to handle a large dataset (~100k images) on a Linux-based platform. It provides functionalities for preprocessing the data and training generative models using the dataset, and it was tested on a local GPUs workstation and HPC cluster. With this project, users can efficiently to extract prior information from large datasets for MRI reconstruction. 
 
-Have a quick try with [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggluo/image-priors/blob/release/misc/demo_sampler_colab.ipynb).
+Have a quick try with [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ggluo/image-priors/blob/release/misc/demo_image_priors_colab.ipynb).
 
 
 ## Workflow
